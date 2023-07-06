@@ -37,4 +37,10 @@ public class MainController {
         model.addAttribute("reqtypes", reqtypes);
         return "types";
    }
+
+    @PostMapping("/delete")
+    public String deleteRequest(@RequestParam Long requestId) {
+        requestTypeRepository.deleteById(requestId);
+        return "redirect:/types";
+    }
 }
