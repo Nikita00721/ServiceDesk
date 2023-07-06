@@ -30,4 +30,11 @@ public class MainController {
         requestTypeRepository.save(requestType);
         return "redirect:/";
     }
+
+    @GetMapping("/types")
+    public String Types(Model model) {
+        Iterable<RequestType> reqtypes = requestTypeRepository.findAll();
+        model.addAttribute("reqtypes", reqtypes);
+        return "types";
+   }
 }

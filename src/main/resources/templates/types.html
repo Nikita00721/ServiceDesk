@@ -8,14 +8,16 @@
 </head>
 <body>
 <main>
-    <h1>Главная страница</h1>
+    <h1>Типы заявок</h1>
 
-    <a class="link" href="/types">Работа с заявками</a>
+    <a class="link" href="/type-add">Добавить тип</a>
 
     <div class="container mt-5">
         <div th:each="el : ${reqtypes}" class="alert alert-info mt-2">
             <h3 th:text="${el.name}"></h3>
             <p th:text="${el.description}"></p>
+            <button>Редактировать</button>
+            <button>Удалить</button>
         </div>
     </div>
 </main>
