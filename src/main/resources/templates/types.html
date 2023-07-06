@@ -16,7 +16,7 @@
         <div th:each="el : ${reqtypes}" class="alert alert-info mt-2">
             <h3 th:text="${el.name}"></h3>
             <p th:text="${el.description}"></p>
-            <button>Редактировать</button>
+            <a th:href="${el.id} + '/type-edit'" class="btn btn-warning">Редактировать</a><br>
             <form action="/delete" method="post">
                 <input type="hidden" name="requestId" th:value="${el.id}" />
                 <button type="submit">Удалить</button>
