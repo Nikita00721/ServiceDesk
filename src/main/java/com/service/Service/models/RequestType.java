@@ -2,12 +2,12 @@ package com.service.Service.models;
 
 import jakarta.persistence.*;
 
-import java.util.Date;
 import java.util.Set;
 
 @Entity
 @Table(name = "request_types")
 public class RequestType {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -50,6 +50,11 @@ public class RequestType {
 
     public void setRequests(Set<Request> requests) {
         this.requests = requests;
+    }
+
+    public RequestType(String name, String description) {
+        this.name = name;
+        this.description = description;
     }
 
     public RequestType() {
