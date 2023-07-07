@@ -8,6 +8,8 @@ function Modal({modal,setModal}) {
     const [valueDes,setValueDes]=useState('')
     const [type,setType]=useState([])
     const [req,setReq]=useState([])
+
+
       const addSubmit=(e)=>{
         e.preventDefault()
        const newReq={
@@ -22,7 +24,12 @@ function Modal({modal,setModal}) {
        setValueDes('')
        setModal(false)
     }
-    const isFormValid = valueTitle.trim()!==''&&valueDes.trim()!==''
+
+
+    const isFormValid = valueTitle.trim()!==''&&valueDes.trim()!==''&&type!==''
+    const countType=(selectedType)=>{
+      return req.filter((request)=>request.type==selectedType).length
+    }
 
     return (
         <div>
@@ -34,16 +41,32 @@ function Modal({modal,setModal}) {
             {
               req.map((request)=>(
                 <li key={request.id}>
-                  <h3>Заголовок{request.title}</h3>
-                  <p>Описание{request.description}</p>
-                  <p>Тип{request.type}</p>
+                  <div>
+                  <h3>Заголовок</h3>
+                  <p>Описание</p>
+                  <p>Тип</p>
+                  </div>
+                  <div>
+                    <p>{request.title}</p>
+                    <p>{request.description}</p>
+                    <p>{request.type}</p>
+                    </div>
                 </li>
+                
               ))
             }
           </ul>
         ):
         (<p>У вас пока нет заявок</p>)}
       </div>
+      <div>
+        <h2>Количество заявок по типа:</h2>
+        <p>Электричество:{countType("Электричество")}</p>
+        <p>Интернет:{countType("Интернет")}</p>
+        <p>др.:{countType("др.")}</p>
+      </div>
+
+
             {modal &&(
       <div className="wrapper h-screen w-screen">
         <div className="modal">
