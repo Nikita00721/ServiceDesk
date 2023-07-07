@@ -1,7 +1,7 @@
 import React,{useState} from "react";
-import Header from "../Header/Header";
-import Footer from "../Footer/Footer";
-import Modal from "../Modal/Modals";
+import Header from "./components/Header/Header";
+import Footer from "./components/Footer/Footer";
+import Modal from "./components/Modal/Modals";
 
 function App({req,setReq}) {
   // const[modalAdd,setModalAdd]=useState(false)

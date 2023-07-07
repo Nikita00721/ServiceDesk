@@ -85,12 +85,12 @@
 }
 .btns-mod .sub{
     background-color: rgb(229, 157, 157);
-    padding: 5px;
+    padding: 10px;
     border-radius: 10px;
 }
 .btns-mod .cancel{
     background-color: rgba(32, 32, 24, 0.288);
-    padding: 5px;
+    padding: 10px;
     border-radius: 10px;
 }
 button[type="submit"]:disabled{
