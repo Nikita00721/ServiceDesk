@@ -16,6 +16,7 @@
 <body>
 <main>
   <h1>Заявки</h1>
+  <a class="link" href="/">На главную</a>
   <div class="container mt-5">
     <div th:each="request : ${requests}" class="alert alert-info mt-2">
       <h3 th:text="${request.fullName}"></h3>
