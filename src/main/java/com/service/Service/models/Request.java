@@ -87,6 +87,14 @@ public class Request {
     public Request() {
     }
 
+    public Request(String requestType, String fullName, String email, Date submissionDate, String description) {
+        this.requestType = requestType;
+        this.fullName = fullName;
+        this.email = email;
+        this.submissionDate = submissionDate;
+        this.description = description;
+    }
+
     @Override
     public String toString() {
         return "Request{" +

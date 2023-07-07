@@ -1,6 +1,7 @@
 package com.service.Service.controllers;
 
 import com.service.Service.models.RequestType;
+import com.service.Service.repo.RequestRepository;
 import org.springframework.ui.Model;
 import com.service.Service.repo.RequestTypeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,9 @@ import java.util.Optional;
 public class MainController {
     @Autowired
     private RequestTypeRepository requestTypeRepository;
+
+    @Autowired
+    RequestRepository requestRepository;
 
    @GetMapping("/")
     public String home(Model model) {
