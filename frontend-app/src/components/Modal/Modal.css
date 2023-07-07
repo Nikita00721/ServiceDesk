@@ -1,0 +1,17 @@
+.wrapper{
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 99999;
+    background: rgba( 0, 0, 0, 0.5);
+    display: grid;
+    align-items: center;
+    justify-content: center;
+    overflow: auto;
+}
+.modal{
+    max-width: 500px;
+    padding: 100px;
+    background-color: beige;
+    border-radius: 12px;
+}

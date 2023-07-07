@@ -1,32 +1,14 @@
 import React,{useState} from "react";
 import Header from "../Header/Header";
-import AddReq from "../AddReq/AddReq";
 import Footer from "../Footer/Footer";
-import ReqList from "../ReqList/ReqList";
+import ModalAdd from "../Modal/ModalAdd";
 
-function App() {
-  const [req,setReq]=useState([
-    {
-      id: 1,
-      status: false,
-      title: 'first',
-    },
-    {
-      id: 2,
-      status: true,
-      title: 'sec',
-    },
-    {
-      id: 3,
-      status: true,
-      title: 'third',
-    }
-  ])
+function App({req,setReq}) {
+  const[modal,setModal]=useState(true)  
   return (
     <div className="App">
-      <Header/>  
-      <AddReq req={req} setReq={setReq}/>
-      <ReqList req={req} setReq={setReq}/>
+      <Header/>      
+      <ModalAdd modal={modal} setModal={setModal}></ModalAdd>
       <Footer/>
     </div> 
   );
