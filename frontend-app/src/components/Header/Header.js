@@ -2,19 +2,23 @@ import React from "react";
 import {LuHome} from "react-icons/lu"
 import "./Header.css"
 import {CiSquareQuestion} from "react-icons/ci"
+import {useNavigate} from "react-router-dom"
 
-function Header({page}){
-    function clickReq(){
-        page.push('/working')
+function Header(){
+
+    const page = useNavigate();
+    function clickReq(){        
+        page('/working')
     }
     // function workReq(){
 
     // }
     return(
+        
         <div className='w-screen text-white bg-red-500 h-14 flex pt-2 pl-60'>
 
             <div className="ml-3 rounded-xl border-solid py-1 px-1 mb-2">
-                <a className="cursor-pointer"><LuHome size={24} /></a>
+                <a className="cursor-pointer" href="/"><LuHome size={24} /></a>
             </div>
             
             <div className="text-2xl font-bold ml-10">            
@@ -34,6 +38,7 @@ function Header({page}){
                 </div>     
             </div>         
         </div>
+        
 
     )
 }
