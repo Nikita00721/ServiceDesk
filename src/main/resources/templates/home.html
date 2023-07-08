@@ -9,6 +9,9 @@
 <body>
 <main>
     <h1>Главная страница</h1>
+    <div th:if="${error}" class="alert alert-danger">
+        <p th:text="${error}"></p>
+    </div>
 
     <a class="link" href="/types">Работа с типами заявок</a>
     <button type="button" class="btn btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#addRequestModal">

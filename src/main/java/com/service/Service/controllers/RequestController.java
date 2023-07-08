@@ -31,6 +31,12 @@ public class RequestController {
     public String ReqAdd(@RequestParam Long requestType, @RequestParam String fullName,
                          @RequestParam String email, @RequestParam String description, Model model) {
         Optional<RequestType> requestTypeOptional = requestTypeRepository.findById(requestType);
+        if (fullName.isEmpty() || email.isEmpty() || description.isEmpty()) {
+            model.addAttribute("error", "Пожалуйста, заполните все поля");
+            Iterable<RequestType> reqtypes = requestTypeRepository.findAll();
+            model.addAttribute("reqtypes", reqtypes);
+            return "home";
+        }
         if (requestTypeOptional.isPresent()) {
             RequestType selectedRequestType = requestTypeOptional.get();
 
@@ -70,19 +76,6 @@ public class RequestController {
 
         return "redirect:/requests/" + requestTypeId;
     }
-
-//    @GetMapping("/request-edit/{id}")
-//    public String getRequestEditPage(@PathVariable Long id, Model model) {
-//        Iterable<RequestType> reqtypes = requestTypeRepository.findAll();
-//        model.addAttribute("reqtypes", reqtypes);
-//        Optional<Request> requestOptional = requestRepository.findById(id);
-//        if (requestOptional.isPresent()) {
-//            Request request = requestOptional.get();
-//            model.addAttribute("request", request);
-//            model.addAttribute("requestType", request.getRequestType());
-//        }
-//        return "request-edit";
-//    }
 
     @GetMapping("/request-edit/{id}")
     public String getRequestEditPage(@PathVariable Long id, Model model) {

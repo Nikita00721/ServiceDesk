@@ -21,6 +21,9 @@ public class MainController {
     private RequestTypeRepository requestTypeRepository;
     private RequestRepository requestRepository;
 
+    public MainController(RequestRepository requestRepository) {
+        this.requestRepository = requestRepository;
+    }
 
    @GetMapping("/")
     public String home(Model model) {
@@ -34,10 +37,18 @@ public class MainController {
 
     @PostMapping("/type-add")
     public String ReqTypeAdd(@RequestParam String name, @RequestParam String description, Model model) {
+        if (name.isEmpty() || description.isEmpty()) {
+            model.addAttribute("error", "Пожалуйста, заполните все поля");
+            Iterable<RequestType> reqtypes = requestTypeRepository.findAll();
+            model.addAttribute("reqtypes", reqtypes);
+            return "types";
+        }
+
         RequestType requestType = new RequestType(name, description);
         requestTypeRepository.save(requestType);
         return "redirect:/";
     }
+
 
     @GetMapping("/types")
     public String Types(Model model) {
