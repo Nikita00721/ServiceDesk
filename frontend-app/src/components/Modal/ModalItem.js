@@ -6,7 +6,7 @@ function ModalItem({ index, request, handleEdit, handleDelete }) {
     return (
         <li>
             <div>
-                <h3>Заголовок</h3>
+                <h3>ФИО</h3>
                 <p>Описание</p>
                 <p>Тип</p>
             </div>

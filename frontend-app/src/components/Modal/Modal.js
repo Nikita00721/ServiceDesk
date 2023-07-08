@@ -11,22 +11,50 @@ function Modal({ modal, setModal }) {
     const [valueDes, setValueDes] = useState("");
     const [type, setType] = useState([]);
     const [req, setReq] = useState([]);
+    const [email, setEmail] = useState("")
     const [editIndex, setEditIndex] = useState(-1);
     const [showConfirm, setShowConfirm] = useState(false);
-    const [isEditModal,setEditModal] = useState(false)
+    const [isEditModal, setEditModal] = useState(false)
+    const [emailError, setEmailError] = useState("")
+    const [titleError, setTitleError] = useState("")
 
-    const isFormValid = valueTitle !== "" && valueDes !== "" && type !== "";
+    const isFormValid = valueTitle !== "" && valueDes !== "" && type !== "" && email !== "";
     const countType = (selectedType) => {
         return req.filter((request) => request.type === selectedType).length;
     };
 
+    const validEmail = (email) => {
+        const emailRe = /^\S+@\S+\.[a-zA-Z]+$/
+        return emailRe.test(email)
+    }
+    const validTitle = (valueTitle) => {
+        const titleRe = /^[a-zA-Zа-яА-Я]+\s[a-zA-Zа-яА-Я]+\s[a-zA-Zа-яА-Я]+$/;
+        return titleRe.test(valueTitle)
+    }
 
     const handleSubmit = (e) => {
         e.preventDefault();
+
+        if(!validEmail(email)){
+            setEmailError("Пожалуйста,введите правильный адрес электронной почты")
+            setTitleError("")
+            return
+        } else if(!validTitle(valueTitle)){
+            setTitleError("Пожалуйста,введите корректное ФИО")
+            setEmailError("")
+            return
+        } else{
+            setTitleError("")
+            setEmailError("")
+
+        }
+
+
         const newReq = {
             title: valueTitle,
             description: valueDes,
             type: type,
+            email: email
         };
 
         if (isEditModal && editIndex !== -1) {
@@ -37,18 +65,21 @@ function Modal({ modal, setModal }) {
         } else {
             setReq([...req, newReq]);
         }
+        setEmailError("")
         setValueTitle("");
         setValueDes("");
         setType("");
+        setEmail("")
         setEditModal(false)
         setModal(false)
     };
 
     const handleEdit = (index) => {
-        const { title, description, type } = req[index];
+        const { title, description, type, email } = req[index];
         setValueTitle(title);
         setValueDes(description);
         setType(type);
+        setEmail(email)
         setEditIndex(index);
         setEditModal(true)
         setModal(true);
@@ -64,15 +95,16 @@ function Modal({ modal, setModal }) {
         }
         setShowConfirm(false);
     };
-    const handleAdd=()=>{
+    const handleAdd = () => {
         setEditModal(false)
         setModal(false)
     }
-    const handleClose=()=>{
+    const handleClose = () => {
         setModal(false)
         setValueTitle("");
         setValueDes("");
         setType("");
+        setEmail("")
         setEditIndex(-1)
         setEditModal(true)
     }
@@ -91,7 +123,7 @@ function Modal({ modal, setModal }) {
             {modal && (
                 <div className="wrapper h-screen w-screen">
                     <div className="modal border-double">
-                    <div
+                        <div
                             className="btn-close"
                             onClick={handleClose}
                             onKeyDown={handleClose}
@@ -107,6 +139,12 @@ function Modal({ modal, setModal }) {
                             valueTitle={valueTitle}
                             setValueTitle={setValueTitle}
                             valueDes={valueDes}
+                            email={email}
+                            setEmail={setEmail}
+                            emailError={emailError}
+                            titleError={titleError}
+                            setEmailError={setEmailError}
+                            setTitleError={setTitleError}
                             setValueDes={setValueDes}
                             type={type}
                             setType={setType}

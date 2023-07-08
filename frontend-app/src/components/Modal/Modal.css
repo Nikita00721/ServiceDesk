@@ -76,23 +76,21 @@
     5px 5px 5px rgba(0, 0, 0, 0.05),
     3px 3px 5px  rgba(0, 0, 0, 0.05);
 }
-.btns-mod{
-    margin-top: 1vi;
+
+.btn-mod{
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     padding: 10px;
-    
 }
-.btns-mod .sub{
+
+
+.btn-mod .sub{
+    margin-top: 2vi;
     background-color: rgb(229, 157, 157);
     padding: 10px;
     border-radius: 10px;
 }
-.btns-mod .cancel{
-    background-color: rgba(32, 32, 24, 0.288);
-    padding: 10px;
-    border-radius: 10px;
-}
+
 button[type="submit"]:disabled{
     opacity: .5;
     cursor: not-allowed;
