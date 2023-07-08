@@ -1,12 +1,9 @@
-// File: ModalConfirmation.js
-
 import React from "react";
 
 function ModalConfirmation({ setShowConfirm }) {
     const confirmDelete = () => {
         const confirmed = window.confirm("Вы уверены, что хотите удалить заявку?");
         if (confirmed) {
-            // Perform delete operation
         }
         setShowConfirm(false);
     };

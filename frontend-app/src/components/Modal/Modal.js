@@ -3,7 +3,6 @@ import { AiOutlineCloseCircle } from "react-icons/ai";
 import ModalConfirmation from "./ModalConfirm";
 import ModalForm from "./ModalForm";
 import ModalInfo from "./ModalInfo";
-import "../../common-styles/page.css";
 import "./Modal.css"
 
 function Modal({ modal, setModal }) {
@@ -19,9 +18,6 @@ function Modal({ modal, setModal }) {
     const [titleError, setTitleError] = useState("")
 
     const isFormValid = valueTitle !== "" && valueDes !== "" && type !== "" && email !== "";
-    // const countType = (selectedType) => {
-    //     return req.filter((request) => request.type === selectedType).length;
-    // };
     const countType = (selectedType) => {
         let total=0;
         req.forEach((request)=>{

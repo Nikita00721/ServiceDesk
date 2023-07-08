@@ -6,15 +6,12 @@ import Modal from "./components/Modal/Modal";
 function App() {
   const[modal,setModal]=useState(false) 
 
-  // const openModal=()=>{
-  //   setModal(true)
-  // }
   
   return (
-    <div className="App">
+    <div>
       <Header onOpen={setModal}/>
-      <Modal modal={modal} setModal={setModal}></Modal>      
-      <Footer/>
+      <Modal modal={modal} setModal={setModal}></Modal>   
+      <Footer></Footer>   
     </div> 
   );
 }
