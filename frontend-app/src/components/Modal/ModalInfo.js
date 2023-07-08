@@ -2,7 +2,7 @@
 import React from "react";
 import ModalItem from "./ModalItem";
 
-function ModalInfo({ req, handleEdit, handleDelete }) {
+function ModalInfo({ req, handleEdit, handleDelete, countType }) {
     return (
         <div>
             <h2 className="flex justify-center text-2xl">Информация о заявке</h2>
@@ -15,11 +15,12 @@ function ModalInfo({ req, handleEdit, handleDelete }) {
                             request={request}
                             handleEdit={handleEdit}
                             handleDelete={handleDelete}
+                            countType={countType}
                         />
                     ))}
                 </ul>
             ) : (
-                <p>У вас пока нет заявок</p>
+                <p className="nothing">У вас пока нет заявок</p>
             )}
         </div>
     );

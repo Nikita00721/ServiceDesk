@@ -19,8 +19,17 @@ function Modal({ modal, setModal }) {
     const [titleError, setTitleError] = useState("")
 
     const isFormValid = valueTitle !== "" && valueDes !== "" && type !== "" && email !== "";
+    // const countType = (selectedType) => {
+    //     return req.filter((request) => request.type === selectedType).length;
+    // };
     const countType = (selectedType) => {
-        return req.filter((request) => request.type === selectedType).length;
+        let total=0;
+        req.forEach((request)=>{
+            if (request.type===selectedType){
+                total++
+            }
+        })
+        return total
     };
 
     const validEmail = (email) => {
@@ -111,13 +120,7 @@ function Modal({ modal, setModal }) {
 
     return (
         <div>
-            <ModalInfo req={req} handleEdit={handleEdit} handleDelete={handleDelete} />
-            <div>
-                <h2>Количество заявок по типу:</h2>
-                <p>Электричество: {countType("Электричество")}</p>
-                <p>Интернет: {countType("Интернет")}</p>
-                <p>Другое: {countType("Другое")}</p>
-            </div>
+            <ModalInfo req={req} handleEdit={handleEdit} handleDelete={handleDelete} countType={countType} />
 
             {showConfirm && <ModalConfirmation setShowConfirm={setShowConfirm} />}
             {modal && (

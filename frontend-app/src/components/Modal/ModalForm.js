@@ -20,15 +20,17 @@ function ModalForm({
             <form onSubmit={handleSubmit}>
                 <div className="content">
                     <h2>ФИО</h2>
+                    {titleError&&<p className="text-red-400 text-xs">{titleError}</p>}
                     <input type="text" placeholder="Введите полное имя" value={valueTitle} 
                     onChange={(e) => setValueTitle(e.target.value)}/>
-                        {titleError&&<p className="text-black">{titleError}</p>}
+                        
                 </div>
                 <div className="content">
                     <h2>Email</h2>
+                    {emailError&&<p className="text-red-400 text-xs ">{emailError}</p>}
                     <input type="email" placeholder="Введите email" value={email} 
                     onChange={(e) => setEmail(e.target.value)} />
-                        {emailError&&<p className="text-red ">{emailError}</p>}
+                        
                 </div>
                 <div className="content">
                     <h2>Описание</h2>

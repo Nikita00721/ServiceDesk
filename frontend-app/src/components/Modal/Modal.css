@@ -83,6 +83,19 @@
     padding: 10px;
 }
 
+.nothing{
+    position: relative;
+    display: grid;
+    top: 5vi;
+    text-align: center;
+    justify-content: center;
+    font-size: 1.6vi;
+    align-items: center;
+}
+.counters{
+    position: relative;
+    font-size: 1.3vi;
+}
 
 .btn-mod .sub{
     margin-top: 2vi;

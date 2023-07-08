@@ -1,19 +1,16 @@
 import React from "react";
+import "./Modal.css"
 
-function ModalItem({ index, request, handleEdit, handleDelete }) {
+function ModalItem({ index, request, handleEdit, handleDelete,countType }) {
     const { title, description, type } = request;
 
     return (
         <li>
-            <div>
-                <h3>ФИО</h3>
-                <p>Описание</p>
-                <p>Тип</p>
-            </div>
-            <div>
+            <div className="items-info">
+                <p>{type}</p>
                 <p>{title}</p>
                 <p>{description}</p>
-                <p>{type}</p>
+                <p>{countType(type)}</p>
             </div>
             <div>
                 <button onClick={() => handleEdit(index)}>Редактировать</button>
