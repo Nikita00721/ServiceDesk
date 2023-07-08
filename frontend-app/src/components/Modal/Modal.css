@@ -82,7 +82,22 @@
     justify-content: center;
     padding: 10px;
 }
-
+.content-req{
+    position: relative;
+    border-radius: 10px;
+    width: 70%;
+    margin-top: 1vi;
+    margin-left: 16vi;
+    padding: 10px 50px;
+    border: crimson double;
+    
+}
+.items-info{
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
 .nothing{
     position: relative;
     display: grid;
@@ -96,7 +111,81 @@
     position: relative;
     font-size: 1.3vi;
 }
-
+.count-type{
+    background-color: bisque;
+    border-radius: 30px;
+    padding: 6px;
+}
+.request{
+    display: grid;
+    align-items: center;
+    justify-content: center;
+}
+.actions{
+    display: inline-flex;
+    padding-left: 46vi;
+}
+.actions .icons{
+    margin: 0 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    position: relative;
+    z-index: 2;
+}
+.actions .icons span{
+    position: relative;
+    height: 60px;
+    width: 60px;
+    z-index: 2;
+    display: block;
+    background-color: rgb(255, 235, 210);
+    text-align: center;
+    border-radius: 50%;
+    box-shadow: 0 10px 10px rgba( 0, 0, 0, 0.2);
+}
+.actions .icons span .icon{
+    font-size: 25px;
+    margin: 17px;
+    line-height: 30px;
+}
+.actions .icons .tooltip{
+    background-color:rgb(112, 112, 112);
+    color: white;
+    position: absolute;
+    top: 0px;
+    font-size: 1vi;
+    opacity: 0;
+    pointer-events: none;
+    padding: 8px 12px;
+    border-radius: 25px;
+    box-shadow: 0 10px 10px rgba( 0, 0, 0, 0.2);
+    transition: all .5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+.actions .icons:hover .tooltip{
+    top: -56px;
+    opacity: 1;
+    pointer-events: auto;
+}
+.actions .icons .tooltip::before{
+    position: absolute;
+    content: "";
+    height: 19px;
+    width: 19px;
+    background:rgb(112, 112, 112);
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%) rotate(45deg);
+}
+.actions .icon:hover span,
+.actions .icon:hover .tooltip{
+    text-shadow: 0px -1px 0px rgba( 0, 0, 0, 0.4);
+}
+.line{
+    background-color: black;
+    height: 1px;
+}
 .btn-mod .sub{
     margin-top: 2vi;
     background-color: rgb(229, 157, 157);

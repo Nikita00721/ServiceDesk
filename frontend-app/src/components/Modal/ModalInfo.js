@@ -5,7 +5,7 @@ import ModalItem from "./ModalItem";
 function ModalInfo({ req, handleEdit, handleDelete, countType }) {
     return (
         <div>
-            <h2 className="flex justify-center text-2xl">Информация о заявке</h2>
+            <h2 className="flex justify-center text-2xl mt-2">Информация о заявке</h2>
             {req.length > 0 ? (
                 <ul>
                     {req.map((request, index) => (
