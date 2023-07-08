@@ -1,20 +1,19 @@
 import React,{useState} from "react";
 import Header from "./components/Header/Header";
 import Footer from "./components/Footer/Footer";
-import Modal from "./components/Modal/Modals";
+import Modal from "./components/Modal/Modal";
 
-function App({req,setReq}) {
-  // const[modalAdd,setModalAdd]=useState(false)
-  // const[modalEdit,setModalEdit]=useState(false) 
-  // const[modalDel,setModalDel]=useState(false)
+function App() {
   const[modal,setModal]=useState(false) 
 
+  // const openModal=()=>{
+  //   setModal(true)
+  // }
   
   return (
     <div className="App">
-      <Header/>      
-      <Modal setModal={setModal} modal={modal}>
-      </Modal>
+      <Header onOpen={setModal}/>
+      <Modal modal={modal} setModal={setModal}></Modal>      
       <Footer/>
     </div> 
   );

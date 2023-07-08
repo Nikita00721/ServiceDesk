@@ -4,15 +4,13 @@ import "./Header.css"
 import {CiSquareQuestion} from "react-icons/ci"
 import {useNavigate} from "react-router-dom"
 
-function Header(){
+function Header({onOpen}){
 
     const page = useNavigate();
     function clickReq(){        
         page('/working')
     }
-    // function workReq(){
-
-    // }
+    
     return(
         
         <div className='w-screen text-white bg-red-500 h-14 flex pt-2 pl-60'>
@@ -27,8 +25,8 @@ function Header(){
 
             <div className="flex pl-96">
             <div className="btn">
-                <button onClick>
-                    <span>Оставить Заявку</span>
+                <button onClick={onOpen}>
+                    <span>Оставить заявку</span>
                 </button>
                 </div>
                 <div className="btn">
