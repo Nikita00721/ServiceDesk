@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.ArrayList;
 import java.util.Optional;
@@ -18,9 +19,8 @@ import java.util.Optional;
 public class MainController {
     @Autowired
     private RequestTypeRepository requestTypeRepository;
+    private RequestRepository requestRepository;
 
-    @Autowired
-    RequestRepository requestRepository;
 
    @GetMapping("/")
     public String home(Model model) {
@@ -46,11 +46,18 @@ public class MainController {
         return "types";
    }
 
-    @PostMapping("/delete")
-    public String deleteRequest(@RequestParam Long requestId) {
+    @PostMapping("/type-delete")
+    public String deleteRequest(@RequestParam Long requestId, RedirectAttributes redirectAttributes) {
+        RequestType requestType = requestTypeRepository.findById(requestId).orElse(null);
+        if (requestType != null && !requestRepository.findByRequestType(requestType).isEmpty()) {
+            redirectAttributes.addAttribute("error", "ArticlesExist");
+            return "redirect:/types";
+        }
+
         requestTypeRepository.deleteById(requestId);
         return "redirect:/types";
     }
+
 
     @GetMapping("/{id}/type-edit")
     public String typeEdit(@PathVariable(value = "id") long id, Model model) {

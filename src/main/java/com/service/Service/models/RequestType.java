@@ -2,6 +2,7 @@ package com.service.Service.models;
 
 import jakarta.persistence.*;
 
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -16,8 +17,9 @@ public class RequestType {
 
     private String description;
 
-    @OneToMany(mappedBy = "type")
-    private Set<Request> requests;
+    @OneToMany(mappedBy = "requestType", fetch = FetchType.EAGER)
+    private Set<Request> requestSet;
+
 
 
     public Long getId() {
@@ -44,13 +46,14 @@ public class RequestType {
         this.description = description;
     }
 
-    public Set<Request> getRequests() {
-        return requests;
+    public Set<Request> getRequestSet() {
+        return requestSet;
     }
 
-    public void setRequests(Set<Request> requests) {
-        this.requests = requests;
+    public void setRequestSet(Set<Request> requestSet) {
+        this.requestSet = requestSet;
     }
+
 
     public RequestType(String name, String description) {
         this.name = name;
@@ -66,7 +69,7 @@ public class RequestType {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
-                ", requests=" + requests +
                 '}';
     }
+
 }

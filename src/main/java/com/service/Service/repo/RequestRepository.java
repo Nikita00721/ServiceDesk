@@ -7,5 +7,6 @@ import com.service.Service.models.Request;
 import java.util.List;
 
 public interface RequestRepository extends CrudRepository<Request, Long> {
-    List<Request> findByType(RequestType type);
+    List<Request> findByRequestType(RequestType requestType);
+
 }

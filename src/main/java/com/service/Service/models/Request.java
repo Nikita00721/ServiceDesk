@@ -11,9 +11,6 @@ public class Request {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "request_type")
-    private String requestType;
-
     @Column(name = "full_name")
     private String fullName;
 
@@ -26,7 +23,8 @@ public class Request {
 
     @ManyToOne
     @JoinColumn(name = "type_id")
-    private RequestType type;
+    private RequestType requestType;
+
 
     public Long getId() {
         return id;
@@ -34,14 +32,6 @@ public class Request {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getRequestType() {
-        return requestType;
-    }
-
-    public void setRequestType(String requestType) {
-        this.requestType = requestType;
     }
 
     public String getFullName() {
@@ -76,19 +66,18 @@ public class Request {
         this.description = description;
     }
 
-    public RequestType getType() {
-        return type;
+    public RequestType getRequestType() {
+        return requestType;
     }
 
-    public void setType(RequestType type) {
-        this.type = type;
+    public void setRequestType(RequestType requestType) {
+        this.requestType = requestType;
     }
 
     public Request() {
     }
 
-    public Request(String requestType, String fullName, String email, Date submissionDate, String description) {
-        this.requestType = requestType;
+    public Request(String fullName, String email, Date submissionDate, String description) {
         this.fullName = fullName;
         this.email = email;
         this.submissionDate = submissionDate;
@@ -99,12 +88,11 @@ public class Request {
     public String toString() {
         return "Request{" +
                 "id=" + id +
-                ", requestType='" + requestType + '\'' +
                 ", fullName='" + fullName + '\'' +
                 ", email='" + email + '\'' +
                 ", submissionDate=" + submissionDate +
                 ", description='" + description + '\'' +
-                ", type=" + type +
+                ", type=" + requestType +
                 '}';
     }
 }
