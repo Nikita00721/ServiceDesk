@@ -85,6 +85,7 @@
 .content-req{
     position: relative;
     border-radius: 10px;
+    overflow-x: hidden;
     width: 70%;
     margin-top: 1vi;
     margin-left: 16vi;
@@ -93,10 +94,12 @@
     
 }
 .items-info{
-    position: relative;
+    /* position: relative; */
     display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
     justify-content: space-between;
-    align-items: center;
+    /* align-items: center; */
 }
 .nothing{
     position: relative;
@@ -115,15 +118,25 @@
     background-color: bisque;
     border-radius: 30px;
     padding: 6px;
+    align-self: flex-end;
+    white-space: nowrap;
+    margin-left: auto;
 }
 .request{
     display: grid;
     align-items: center;
     justify-content: center;
 }
+.descrip{
+    width: 70%;
+    word-wrap: break-word;
+    white-space: pre-wrap;
+
+}
 .actions{
     display: inline-flex;
     padding-left: 46vi;
+    margin-bottom: 2vi;
 }
 .actions .icons{
     margin: 0 20px;

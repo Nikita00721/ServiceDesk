@@ -1,13 +1,11 @@
 import React,{useState} from "react";
 import Header from "../Header/Header";
-import Footer from "../Footer/Footer";
 
 
-function Work() {
+function Work({setClicked,clicked}) {
   return (
     <div className="App">
-      <Header/>
-      <Footer/>
+      <Header setClicked={setClicked} clicked={true}></Header>
     </div> 
   );
 }

@@ -4,6 +4,7 @@ import {AiOutlineDelete} from "react-icons/ai"
 import {AiOutlineEdit} from "react-icons/ai"
 function ModalItem({ index, request, handleEdit, handleDelete,countType }) {
     const { title, description, type } = request;
+    const isDescripLong=description.length>50
 
     return (
         <li className="content-req">
@@ -11,9 +12,11 @@ function ModalItem({ index, request, handleEdit, handleDelete,countType }) {
                 <div className="request">
                 <p className="text-3xl">{type}</p>
                 <p className="text-m">{title}</p>
-                <p className="text-m">{description}</p>
+                <p className="text-m descrip">{description}</p>
                 </div>                
-                <p className="text-xl count-type">{countType(type)}</p>
+                <div className="count-type">
+                <p className="text-2xl">{countType(type)}</p>
+                </div>
             </div>
             <div className="actions">
                 <button className="icons edit" onClick={() => handleEdit(index)}>
