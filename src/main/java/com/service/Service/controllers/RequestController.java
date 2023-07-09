@@ -28,8 +28,15 @@ public class RequestController {
 
 
     @PostMapping("/request-add")
-    public String ReqAdd(@RequestParam Long requestType, @RequestParam String fullName,
+    public String ReqAdd(@RequestParam(required = false) Long requestType, @RequestParam String fullName,
                          @RequestParam String email, @RequestParam String description, Model model) {
+        if (requestType == null) {
+            model.addAttribute("error", "Пожалуйста, выберите тип заявки");
+            Iterable<RequestType> reqtypes = requestTypeRepository.findAll();
+            model.addAttribute("reqtypes", reqtypes);
+            return "home";
+        }
+
         Optional<RequestType> requestTypeOptional = requestTypeRepository.findById(requestType);
         if (fullName.isEmpty() || email.isEmpty() || description.isEmpty()) {
             model.addAttribute("error", "Пожалуйста, заполните все поля");
@@ -37,6 +44,7 @@ public class RequestController {
             model.addAttribute("reqtypes", reqtypes);
             return "home";
         }
+
         if (requestTypeOptional.isPresent()) {
             RequestType selectedRequestType = requestTypeOptional.get();
 
@@ -52,6 +60,7 @@ public class RequestController {
 
         return "redirect:/";
     }
+
 
     @GetMapping("/requests/{requestTypeId}")
     public String getRequestsByType(@PathVariable Long requestTypeId, Model model) {
