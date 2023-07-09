@@ -1,16 +1,20 @@
 import React, { useState } from "react";
-import Header from "./components/Header/Header";
-import Modal from "./components/Modal/Modal";
+import Work from './components/Pages/Work';
+import Home from "./components/Pages/Home";
+import {BrowserRouter, Routes, Route} from 'react-router-dom';
 
 function App() {
-  const [modal, setModal] = useState(false)
-  const [clicked, setClicked] = useState(false)
-
+  
   return (
-    <div>
-      <Header onOpen={setModal} clicked={clicked} setClicked={setClicked} />
-      <Modal modal={modal} setModal={setModal}></Modal>
-    </div>
+    // <div></div>
+    <BrowserRouter>
+        <Routes>
+          <Route exact path="/" element={<Home />}>
+          </Route>
+          <Route path="/working" element={<Work />}>
+          </Route>
+        </Routes>
+    </BrowserRouter>
   );
 }
 
