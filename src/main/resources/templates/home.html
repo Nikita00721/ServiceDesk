@@ -17,15 +17,16 @@
     <button type="button" class="btn btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#addRequestModal">
         Добавить заявку
     </button>
-<!--Извини, пришлось добавить javascript здесь. Он нужен, чтобы при нажатии на блок, происходил переход ко всем заявкам данного типа-->
-    <div class="container mt-5">
-        <div th:each="el : ${reqtypes}" class="alert alert-info mt-2" th:data-requestTypeId="${el.id}">
-            <div>
-                <h3 th:text="${el.name}"></h3>
-                <p th:text="${el.description}"></p>
-            </div>
+<!--Извини, пришлось добавить javascript здесь. Он нужен, чтобы при нажатии на блок, происходил переход ко всем заявкам данного типа--><div class="container mt-5">
+    <div th:each="el : ${reqtypes}" class="alert alert-info mt-2" th:data-requestTypeId="${el.id}">
+        <div>
+            <h3 th:text="${el.name}"></h3>
+            <p th:text="${el.description}"></p>
+            <p>Количество заявок: <span th:text="${el.requestSet.size()}"></span></p>
         </div>
     </div>
+</div>
+
     <script>
     document.addEventListener('DOMContentLoaded', function () {
         var requestContainers = document.querySelectorAll('.alert.alert-info');

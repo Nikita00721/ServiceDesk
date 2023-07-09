@@ -25,12 +25,13 @@ public class MainController {
         this.requestRepository = requestRepository;
     }
 
-   @GetMapping("/")
+    @GetMapping("/")
     public String home(Model model) {
         Iterable<RequestType> reqtypes = requestTypeRepository.findAll();
         model.addAttribute("reqtypes", reqtypes);
         return "home";
     }
+
 
     @GetMapping("/type-add")
     public String postAdd(Model model) {return "type-add";}
