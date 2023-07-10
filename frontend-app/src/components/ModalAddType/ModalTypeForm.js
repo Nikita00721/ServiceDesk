@@ -10,6 +10,7 @@ function ModalTypeForm({
     setTypeTitle
 
 }) {
+    
     return (
         <div className="req">
             <form onSubmit={handleSubmitType}>
@@ -23,7 +24,7 @@ function ModalTypeForm({
                 <div className="content">
                     <h2 className="text-black">Описание</h2>
                     <textarea type="text" placeholder="Описание" value={valueDesType} 
-                    onChange={(e) => setValueDesType(e.target.value)} ></textarea>
+                    onChange={(e) => setValueDesType(e.target.value)} maxLength={25}></textarea>
                 </div>
 
                 <div className="btn-mod">

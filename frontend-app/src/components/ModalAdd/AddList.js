@@ -5,13 +5,12 @@ import ModalForm from "./ModalForm";
 import ModalInfo from "./ModalInfo";
 import "./Modal.css"
 
-function Modal({ modal, setModal }) {
+function AddList({ modal, setModal }) {
     const [valueTitle, setValueTitle] = useState("");
     const [valueDes, setValueDes] = useState("");
     const [type, setType] = useState("");
     const [req, setReq] = useState([]);
     const [email, setEmail] = useState("")
-    const [showConfirm, setShowConfirm] = useState(false);
     const [emailError, setEmailError] = useState("")
     const [titleError, setTitleError] = useState("")
 
@@ -81,28 +80,6 @@ function Modal({ modal, setModal }) {
         setModal(false);
     };
 
-    const handleEdit = (index) => {
-        if (req[index]) {
-            const { title, description, type, email } = req[index];
-            setValueTitle(title);
-            setValueDes(description);
-            setType(type);
-            setEmail(email);
-            setModal(true);
-        }
-    };
-
-    const handleDelete = (index) => {
-        setShowConfirm(true);
-        const confirmDelete = window.confirm("Вы уверены, что хотите удалить заявку?");
-        if (confirmDelete) {
-            const updatedReq = [...req];
-            updatedReq.splice(index, 1);
-            setReq(updatedReq);
-        }
-        setShowConfirm(false);
-    };
-
     const handleClose = () => {
         setModal(false)
         setValueTitle("");
@@ -115,7 +92,6 @@ function Modal({ modal, setModal }) {
         <div>
             <ModalInfo req={req} countType={countType}/>
 
-            {showConfirm && <ModalConfirmation setShowConfirm={setShowConfirm} />}
             {modal && (
                 <div className="wrapper h-screen w-screen">
                     <div className="modal border-double">
@@ -153,5 +129,5 @@ function Modal({ modal, setModal }) {
     );
 }
 
-export default Modal;
+export default AddList;
 

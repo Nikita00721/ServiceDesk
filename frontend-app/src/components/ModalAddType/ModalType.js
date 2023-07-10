@@ -1,21 +1,38 @@
 import React,{useState} from "react";
 import ModalTypeForm from "./ModalTypeForm";
 import { AiOutlineCloseCircle } from "react-icons/ai";
-
+import RequestList from "./RequestList";
+import ModalConfirmation from "../ModalAdd/ModalConfirm";
 
 function ModalType({showModalType,setShowModalType}){
     const [typeTitleError,setTypeTitleError] = useState("")
     const [reqType,setReqType]=useState([])
     const [valueDesType,setValueDesType]=useState("")
     const [typeTitle,setTypeTitle]=useState("")
+    const [showConfirm, setShowConfirm] = useState(false);
     const isFormValidType = typeTitle!==""&&valueDesType!=="" ;
     const validTitleType = (typeTitle) => {
         const titleRe = /^[a-zA-Zа-яА-Я]+$/;
         return titleRe.test(typeTitle)
     }
-    const validMaxDes=(descrip)=>{
-        const maxDes=
-    }
+    const handleDelete = (index) => {
+        setShowConfirm(true);
+        const confirmDelete = window.confirm("Вы уверены, что хотите удалить заявку?");
+        if (confirmDelete) {
+            const updatedReq = [...reqType];
+            updatedReq.splice(index, 1);
+            setReqType(updatedReq);
+        }
+        setShowConfirm(false);
+    };
+    const handleEdit = (index) => {
+        if (reqType[index]) {
+            const { typeTitle,typeDes } = reqType[index];
+            setTypeTitle(typeTitle)
+            setValueDesType(typeDes);
+            
+        }
+    };
 
     const handleSubmitType = (e) => {
         e.preventDefault();
@@ -52,6 +69,8 @@ function ModalType({showModalType,setShowModalType}){
     };
     return(
         <div>
+            <RequestList reqType={reqType} handleDelete={handleDelete} handleEdit={handleEdit}/>
+            {showConfirm && <ModalConfirmation setShowConfirm={setShowConfirm} />}
             {showModalType &&(
                 <div className="wrapper h-screen w-screen">
                 <div className="modal border-double">

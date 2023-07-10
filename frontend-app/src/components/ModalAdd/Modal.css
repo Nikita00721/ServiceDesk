@@ -136,6 +136,7 @@
 .actions{
     display: inline-flex;
     padding-left: 46vi;
+    margin-top: -.5vi;
     margin-bottom: 2vi;
 }
 .actions .icons{
