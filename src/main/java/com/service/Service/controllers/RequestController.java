@@ -3,121 +3,99 @@ package com.service.Service.controllers;
 import com.service.Service.models.Request;
 import com.service.Service.models.RequestType;
 import com.service.Service.repo.RequestRepository;
-import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import com.service.Service.repo.RequestTypeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.http.ResponseEntity;
+
 
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
-@Controller
+@RestController
+@RequestMapping("/api/requests")
 public class RequestController {
     @Autowired
     private RequestTypeRepository requestTypeRepository;
     private RequestRepository requestRepository;
 
-    @Autowired
     public RequestController(RequestRepository requestRepository) {
         this.requestRepository = requestRepository;
     }
 
-
-
-    @PostMapping("/request-add")
-    public String ReqAdd(@RequestParam(required = false) Long requestType, @RequestParam String fullName,
-                         @RequestParam String email, @RequestParam String description, Model model) {
-        if (requestType == null) {
-            model.addAttribute("error", "Пожалуйста, выберите тип заявки");
-            Iterable<RequestType> reqtypes = requestTypeRepository.findAll();
-            model.addAttribute("reqtypes", reqtypes);
-            return "home";
-        }
-
-        Optional<RequestType> requestTypeOptional = requestTypeRepository.findById(requestType);
-        if (fullName.isEmpty() || email.isEmpty() || description.isEmpty()) {
-            model.addAttribute("error", "Пожалуйста, заполните все поля");
-            Iterable<RequestType> reqtypes = requestTypeRepository.findAll();
-            model.addAttribute("reqtypes", reqtypes);
-            return "home";
-        }
-
-        if (requestTypeOptional.isPresent()) {
-            RequestType selectedRequestType = requestTypeOptional.get();
-
-            Request request = new Request();
-            request.setFullName(fullName);
-            request.setEmail(email);
-            request.setDescription(description);
-            request.setRequestType(selectedRequestType);
-            request.setSubmissionDate(new Date());
-
-            requestRepository.save(request);
-        }
-
-        return "redirect:/";
+    @GetMapping
+    public ResponseEntity<List<Request>> getAllRequests() {
+        List<Request> requests = StreamSupport.stream(requestRepository.findAll().spliterator(), false)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(requests);
     }
 
+    @PostMapping
+    public ResponseEntity<Request> addRequest(@RequestBody Request request) {
+        if (request.getRequestType() == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
 
-    @GetMapping("/requests/{requestTypeId}")
-    public String getRequestsByType(@PathVariable Long requestTypeId, Model model) {
-        Optional<RequestType> requestTypeOptional = requestTypeRepository.findById(requestTypeId);
+        Optional<RequestType> requestTypeOptional = requestTypeRepository.findById(request.getRequestType().getId());
         if (requestTypeOptional.isPresent()) {
             RequestType requestType = requestTypeOptional.get();
-            List<Request> requests = requestRepository.findByRequestType(requestType);
-            model.addAttribute("requests", requests);
-            model.addAttribute("requestType", requestType);
+            request.setRequestType(requestType);
+            request.setSubmissionDate(new Date());
+            Request savedRequest = requestRepository.save(request);
+            return new ResponseEntity<>(savedRequest, HttpStatus.CREATED);
         }
-        return "requests-by-type";
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
-    @PostMapping("/request-by-type/{id}/delete")
-    public String reqDelete(@PathVariable(value = "id") long id, HttpServletRequest servletRequest) {
-        Request deleteRequest = requestRepository.findById(id).orElseThrow();
-        requestRepository.delete(deleteRequest);
-
-        String referer = servletRequest.getHeader("Referer");
-        String[] parts = referer.split("/");
-        String requestTypeId = parts[parts.length - 1];
-
-        return "redirect:/requests/" + requestTypeId;
-    }
-
-    @GetMapping("/request-edit/{id}")
-    public String getRequestEditPage(@PathVariable Long id, Model model) {
-        Iterable<RequestType> reqtypes = requestTypeRepository.findAll();
-        model.addAttribute("reqtypes", reqtypes);
+    @GetMapping("/{id}")
+    public ResponseEntity<Request> getRequestById(@PathVariable("id") Long id) {
         Optional<Request> requestOptional = requestRepository.findById(id);
         if (requestOptional.isPresent()) {
             Request request = requestOptional.get();
-            model.addAttribute("request", request);
+            return new ResponseEntity<>(request, HttpStatus.OK);
         }
-        return "request-edit";
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @PostMapping("/request-update")
-    public String updateRequest(@ModelAttribute("request") Request updatedRequest) {
-        try {
-            if (updatedRequest.getRequestType() == null) {
-                throw new IllegalArgumentException("Недопустимый тип заявки");
+    @PutMapping("/{id}")
+    public ResponseEntity<Request> updateRequest(@PathVariable("id") Long id, @RequestBody Request updatedRequest) {
+        RequestType requestType = updatedRequest.getRequestType();
+        if (requestType == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        Optional<Request> requestOptional = requestRepository.findById(id);
+        if (requestOptional.isPresent()) {
+            Request request = requestOptional.get();
+            Optional<RequestType> requestTypeOptional = requestTypeRepository.findById(requestType.getId());
+            if (requestTypeOptional.isPresent()) {
+                request.setFullName(updatedRequest.getFullName());
+                request.setEmail(updatedRequest.getEmail());
+                request.setDescription(updatedRequest.getDescription());
+                request.setRequestType(requestType);
+                Request savedRequest = requestRepository.save(request);
+                return new ResponseEntity<>(savedRequest, HttpStatus.OK);
             }
-            RequestType requestType = requestTypeRepository.findById(updatedRequest.getRequestType().getId())
-                    .orElseThrow(() -> new IllegalArgumentException("Недопустимый id типа заявки: " + updatedRequest.getRequestType().getId()));
-            Request existingRequest = requestRepository.findById(updatedRequest.getId())
-                    .orElseThrow(() -> new IllegalArgumentException("Недопустимый id заявки: " + updatedRequest.getId()));
-            existingRequest.setFullName(updatedRequest.getFullName());
-            existingRequest.setEmail(updatedRequest.getEmail());
-            existingRequest.setDescription(updatedRequest.getDescription());
-            existingRequest.setRequestType(requestType);
-            requestRepository.save(existingRequest);
-            String redirectUrl = "/requests/" + requestType.getId();
-            return "redirect:" + redirectUrl;
-        } catch (Exception e) {
-            return "error-page";
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<HttpStatus> deleteRequest(@PathVariable("id") Long id) {
+        Optional<Request> requestOptional = requestRepository.findById(id);
+        if (requestOptional.isPresent()) {
+            Request request = requestOptional.get();
+            requestRepository.delete(request);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
 }
