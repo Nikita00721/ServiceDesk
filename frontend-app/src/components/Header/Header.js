@@ -2,7 +2,7 @@ import React, { useState , useEffect} from "react";
 import {LuHome} from "react-icons/lu"
 import "./Header.css"
 import {CiSquareQuestion} from "react-icons/ci"
-import {useNavigate,useLocation} from "react-router-dom"
+import {useNavigate,useLocation,Link} from "react-router-dom"
 
 function Header({onOpen}){
 
@@ -27,7 +27,7 @@ function Header({onOpen}){
             
             <div className="flex items-center">
             <div className="ml-3 rounded-xl border-solid py-1 px-1">
-                <a className="cursor-pointer" href="/"><LuHome size={24} /></a>
+                <Link to="/" className="cursor-pointer"><LuHome size={24} /></Link>
             </div>
             <div className="text-2xl font-bold mx-2">            
             Request List

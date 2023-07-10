@@ -50,7 +50,7 @@ function ModalForm({
 
                 <div className="btn-mod">
                     <button className="sub" type="submit" disabled={!isFormValid}>
-                        {editIndex == -1 ? "Добавить" : "Сохранить"}
+                        Добавить
                     </button>
 
                 </div>

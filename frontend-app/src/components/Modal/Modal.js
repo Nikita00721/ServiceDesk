@@ -8,25 +8,26 @@ import "./Modal.css"
 function Modal({ modal, setModal }) {
     const [valueTitle, setValueTitle] = useState("");
     const [valueDes, setValueDes] = useState("");
-    const [type, setType] = useState([]);
+    const [type, setType] = useState("");
     const [req, setReq] = useState([]);
     const [email, setEmail] = useState("")
-    const [editIndex, setEditIndex] = useState(-1);
     const [showConfirm, setShowConfirm] = useState(false);
-    const [isEditModal, setEditModal] = useState(false)
     const [emailError, setEmailError] = useState("")
     const [titleError, setTitleError] = useState("")
 
     const isFormValid = valueTitle !== "" && valueDes !== "" && type !== "" && email !== "";
-    const countType = (selectedType) => {
-        let total=0;
-        req.forEach((request)=>{
-            if (request.type===selectedType){
-                total++
-            }
-        })
-        return total
-    };
+    const countType = (request) => {
+        const { title, description } = request;
+        let total = 0;
+        
+        req.forEach((item) => {
+        if (item.title === title && item.description === description) {
+        total++;
+        }
+        });
+        
+        return total;
+        };
 
     const validEmail = (email) => {
         const emailRe = /^\S+@\S+\.[a-zA-Z]+$/
@@ -53,42 +54,47 @@ function Modal({ modal, setModal }) {
             setEmailError("")
 
         }
-
-
         const newReq = {
             title: valueTitle,
             description: valueDes,
             type: type,
             email: email
         };
+        
 
-        if (isEditModal && editIndex !== -1) {
-            const updatedReq = [...req];
-            updatedReq[editIndex] = newReq;
-            setReq(updatedReq);
-            setEditIndex(-1);
-        } else {
-            setReq([...req, newReq]);
-        }
+        const existingReq = req.find(
+            (item) => item.type === newReq.type && item.email === newReq.email
+            );
+            
+            if (existingReq) {
+            setReq((prevReq) =>
+            prevReq.map((item) =>
+            item.type === newReq.type && item.email === newReq.email ? newReq : item
+            )
+            );
+            } else {
+            setReq((prevReq) => [...prevReq, newReq]);
+            }
+        
+
         setEmailError("")
         setValueTitle("");
         setValueDes("");
         setType("");
         setEmail("")
-        setEditModal(false)
         setModal(false)
     };
 
     const handleEdit = (index) => {
+        if (req[index]) {
         const { title, description, type, email } = req[index];
         setValueTitle(title);
         setValueDes(description);
         setType(type);
-        setEmail(email)
-        setEditIndex(index);
-        setEditModal(true)
+        setEmail(email);
         setModal(true);
-    };
+        }
+        };
 
     const handleDelete = (index) => {
         setShowConfirm(true);
@@ -100,23 +106,18 @@ function Modal({ modal, setModal }) {
         }
         setShowConfirm(false);
     };
-    const handleAdd = () => {
-        setEditModal(false)
-        setModal(false)
-    }
+
     const handleClose = () => {
         setModal(false)
         setValueTitle("");
         setValueDes("");
         setType("");
         setEmail("")
-        setEditIndex(-1)
-        setEditModal(true)
     }
 
     return (
         <div>
-            <ModalInfo req={req} handleEdit={handleEdit} handleDelete={handleDelete} countType={countType} />
+            <ModalInfo req={req} countType={countType} />
 
             {showConfirm && <ModalConfirmation setShowConfirm={setShowConfirm} />}
             {modal && (
@@ -132,7 +133,7 @@ function Modal({ modal, setModal }) {
                             <AiOutlineCloseCircle size={20} />
                         </div>
 
-                        <h1 className="text-xl text-center">{editIndex !== -1 ? "Редактировать заявку" : "Добавить заявку"}</h1>
+                        <h1 className="text-xl text-center">Добавить заявку</h1>
                         <ModalForm
                             handleSubmit={handleSubmit}
                             valueTitle={valueTitle}
@@ -148,7 +149,6 @@ function Modal({ modal, setModal }) {
                             type={type}
                             setType={setType}
                             isFormValid={isFormValid}
-                            editIndex={editIndex}
                         />
                     </div>
                 </div>

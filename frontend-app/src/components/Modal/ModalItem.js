@@ -2,9 +2,8 @@ import React from "react";
 import "./Modal.css"
 import {AiOutlineDelete} from "react-icons/ai"
 import {AiOutlineEdit} from "react-icons/ai"
-function ModalItem({ index, request, handleEdit, handleDelete,countType }) {
+function ModalItem({ index, request, handleEdit, handleDelete,count, isMainPage }) {
     const { title, description, type } = request;
-    const isDescripLong=description.length>50
 
     return (
         <li className="content-req">
@@ -14,11 +13,14 @@ function ModalItem({ index, request, handleEdit, handleDelete,countType }) {
                 <p className="text-m">{title}</p>
                 <p className="text-m descrip">{description}</p>
                 </div>                
-                <div className="count-type">
-                <p className="text-2xl">{countType(type)}</p>
-                </div>
+                
+                    <div className="count-type">
+                    <p className="text-2xl">{count}</p>
+                    </div>
+
             </div>
-            <div className="actions">
+            {isMainPage &&(
+                <div className="actions">
                 <button className="icons edit" onClick={() => handleEdit(index)}>
                     <div className="tooltip">Редактировать</div>
                     <span><AiOutlineEdit className="icon" size={24}></AiOutlineEdit></span>
@@ -28,6 +30,7 @@ function ModalItem({ index, request, handleEdit, handleDelete,countType }) {
                     <span><AiOutlineDelete className="icon" size={24}></AiOutlineDelete></span>
                     </button>
             </div>
+            )}
         </li>
     );
 }
