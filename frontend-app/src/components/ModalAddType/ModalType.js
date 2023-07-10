@@ -3,16 +3,21 @@ import ModalTypeForm from "./ModalTypeForm";
 import { AiOutlineCloseCircle } from "react-icons/ai";
 
 
-function ModalType({valueDes,setValueDes,showModalType,setShowModalType,req,setReq}){
+function ModalType({showModalType,setShowModalType}){
     const [typeTitleError,setTypeTitleError] = useState("")
+    const [reqType,setReqType]=useState([])
+    const [valueDesType,setValueDesType]=useState("")
     const [typeTitle,setTypeTitle]=useState("")
-    const isFormValidType = typeTitle!==""&&valueDes!=="" ;
+    const isFormValidType = typeTitle!==""&&valueDesType!=="" ;
     const validTitleType = (typeTitle) => {
         const titleRe = /^[a-zA-Zа-яА-Я]+$/;
         return titleRe.test(typeTitle)
     }
+    const validMaxDes=(descrip)=>{
+        const maxDes=
+    }
 
-    const handleSubmit = (e) => {
+    const handleSubmitType = (e) => {
         e.preventDefault();
 
         if (!validTitleType(typeTitle)) {
@@ -24,24 +29,24 @@ function ModalType({valueDes,setValueDes,showModalType,setShowModalType,req,setR
         }
         const newReq = {
             typeTitle: typeTitle,
-            valueDes: valueDes
+            valueDesType: valueDesType
         };
+        setReqType((prevReq) => [...prevReq, newReq]);
 
+        // const existingReqIndex = reqType.findIndex((item) => item.type === newReq.type);
 
-        const existingReqIndex = req.findIndex((item) => item.type === newReq.type);
-
-        if (existingReqIndex !== -1) {
-            setReq((prevReq) => {
-                const updatedReq = [...prevReq];
-                updatedReq[existingReqIndex] = newReq;
-                return updatedReq;
-            });
-        } else {
-            setReq((prevReq) => [...prevReq, newReq]);
+        // if (existingReqIndex !== -1) {
+        //     setReq((prevReq) => {
+        //         const updatedReq = [...prevReq];
+        //         updatedReq[existingReqIndex] = newReq;
+        //         return updatedReq;
+        //     });
+        // } else {
+        //     setReq((prevReq) => [...prevReq, newReq]);
             
-        }
+        // }
 
-        setValueDes("");
+        setValueDesType("");
         setTypeTitle("")
         setShowModalType(false);
     };
@@ -67,9 +72,11 @@ function ModalType({valueDes,setValueDes,showModalType,setShowModalType,req,setR
                     setShowModalType={setShowModalType}
                     showModalType={showModalType}
                     typeTitle={typeTitle}
-                    valueDes={valueDes}
-                    setValueDes={setValueDes}
+                    valueDesType={valueDesType}
+                    setValueDesType={setValueDesType}
                     setTypeTitleError={setTypeTitleError}
+                    isFormValidType={isFormValidType}
+                    handleSubmitType={handleSubmitType}
                     />
                     </div>
                     </div>

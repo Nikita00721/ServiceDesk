@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Header from "../Header/Header";
-import Modal from "../Modal/Modal";
+import Modal from "../ModalAdd/Modal";
 import axios from "axios"
 
 function Home() {
@@ -12,7 +12,7 @@ function Home() {
   },[])
   const fetchData=async()=>{
     try{
-      const response=await axios.get("http://localhost:8082/type-add")
+      const response=await axios.get("/api/types")
       setData(response.data)
     }catch(error){
       console.error("Ошибка при получении данных",error)

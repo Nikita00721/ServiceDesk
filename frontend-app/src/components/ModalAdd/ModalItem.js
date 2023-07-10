@@ -2,7 +2,7 @@ import React from "react";
 import "./Modal.css"
 import {AiOutlineDelete} from "react-icons/ai"
 import {AiOutlineEdit} from "react-icons/ai"
-function ModalItem({ index, request, handleEdit, handleDelete,countType, isMainPage }) {
+function ModalItem({ index, request, handleEdit, handleDelete,countType,isMainPage}) {
     const { title, description, type } = request;
 
     return (
