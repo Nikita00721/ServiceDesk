@@ -2,7 +2,7 @@ import React from "react";
 import "./Modal.css"
 import {AiOutlineDelete} from "react-icons/ai"
 import {AiOutlineEdit} from "react-icons/ai"
-function ModalItem({ index, request, handleEdit, handleDelete,count, isMainPage }) {
+function ModalItem({ index, request, handleEdit, handleDelete,countType, isMainPage }) {
     const { title, description, type } = request;
 
     return (
@@ -15,7 +15,7 @@ function ModalItem({ index, request, handleEdit, handleDelete,count, isMainPage 
                 </div>                
                 
                     <div className="count-type">
-                    <p className="text-2xl">{count}</p>
+                    <p className="text-2xl">{countType(type)}</p>
                     </div>
 
             </div>

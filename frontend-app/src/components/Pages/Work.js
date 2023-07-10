@@ -1,11 +1,14 @@
 import React,{useState} from "react";
 import Header from "../Header/Header";
+import ModalType from "../Modal/ModalType"
 
-
-function Work({setClicked,clicked}) {
+function Work() {
+  const [showModalType, setShowModalType] = useState(false);
+  
   return (
     <div className="App">
-      <Header setClicked={setClicked} clicked={true}></Header>
+      <Header onOpen={setShowModalType}/>
+      <ModalType showModalType={showModalType} setShowModalType={setShowModalType}/>
     </div> 
   );
 }

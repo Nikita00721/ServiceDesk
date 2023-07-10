@@ -9,7 +9,6 @@ function ModalForm({
     type,
     setType,
     isFormValid,
-    editIndex,
     email,
     setEmail,
     emailError,

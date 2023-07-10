@@ -5,7 +5,6 @@ import axios from "axios"
 
 function Home() {
   const [modal, setModal] = useState(false)
-  const [clicked, setClicked] = useState(false)
   const [data,setData]=useState([])
 
   useEffect(()=>{
@@ -13,7 +12,7 @@ function Home() {
   },[])
   const fetchData=async()=>{
     try{
-      const response=await axios.get("/api/data")
+      const response=await axios.get("http://localhost:8082/type-add")
       setData(response.data)
     }catch(error){
       console.error("Ошибка при получении данных",error)
@@ -22,7 +21,7 @@ function Home() {
 
   return (
     <div>
-      <Header onOpen={setModal} clicked={clicked} setClicked={setClicked} />
+      <Header onOpen={setModal}/>
       <Modal modal={modal} setModal={setModal}></Modal>
     </div>
   );

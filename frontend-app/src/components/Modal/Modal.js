@@ -15,19 +15,17 @@ function Modal({ modal, setModal }) {
     const [emailError, setEmailError] = useState("")
     const [titleError, setTitleError] = useState("")
 
-    const isFormValid = valueTitle !== "" && valueDes !== "" && type !== "" && email !== "";
-    const countType = (request) => {
-        const { title, description } = request;
-        let total = 0;
-        
-        req.forEach((item) => {
-        if (item.title === title && item.description === description) {
-        total++;
-        }
-        });
-        
-        return total;
-        };
+
+    const isFormValid = valueTitle !== "" && valueDes !== "" && type !== "" && email !== "" ;
+    const countType = (selectedType) => {
+    let total=0;
+        req.forEach((request)=>{
+            if (request.type===selectedType){
+                total++
+            }
+        })
+        return total
+    };
 
     const validEmail = (email) => {
         const emailRe = /^\S+@\S+\.[a-zA-Z]+$/
@@ -41,15 +39,15 @@ function Modal({ modal, setModal }) {
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        if(!validEmail(email)){
+        if (!validEmail(email)) {
             setEmailError("Пожалуйста,введите правильный адрес электронной почты")
             setTitleError("")
             return
-        } else if(!validTitle(valueTitle)){
+        } else if (!validTitle(valueTitle)) {
             setTitleError("Пожалуйста,введите корректное ФИО")
             setEmailError("")
             return
-        } else{
+        } else {
             setTitleError("")
             setEmailError("")
 
@@ -60,41 +58,39 @@ function Modal({ modal, setModal }) {
             type: type,
             email: email
         };
-        
 
-        const existingReq = req.find(
-            (item) => item.type === newReq.type && item.email === newReq.email
-            );
-            
-            if (existingReq) {
-            setReq((prevReq) =>
-            prevReq.map((item) =>
-            item.type === newReq.type && item.email === newReq.email ? newReq : item
-            )
-            );
-            } else {
+
+        const existingReqIndex = req.findIndex((item) => item.type === newReq.type);
+
+        if (existingReqIndex !== -1) {
+            setReq((prevReq) => {
+                const updatedReq = [...prevReq];
+                updatedReq[existingReqIndex] = newReq;
+                return updatedReq;
+            });
+        } else {
             setReq((prevReq) => [...prevReq, newReq]);
-            }
-        
+            
+        }
 
-        setEmailError("")
+        setEmailError("");
         setValueTitle("");
         setValueDes("");
         setType("");
-        setEmail("")
-        setModal(false)
+        setEmail("");
+        setModal(false);
     };
 
     const handleEdit = (index) => {
         if (req[index]) {
-        const { title, description, type, email } = req[index];
-        setValueTitle(title);
-        setValueDes(description);
-        setType(type);
-        setEmail(email);
-        setModal(true);
+            const { title, description, type, email } = req[index];
+            setValueTitle(title);
+            setValueDes(description);
+            setType(type);
+            setEmail(email);
+            setModal(true);
         }
-        };
+    };
 
     const handleDelete = (index) => {
         setShowConfirm(true);
@@ -117,7 +113,7 @@ function Modal({ modal, setModal }) {
 
     return (
         <div>
-            <ModalInfo req={req} countType={countType} />
+            <ModalInfo req={req} countType={countType}/>
 
             {showConfirm && <ModalConfirmation setShowConfirm={setShowConfirm} />}
             {modal && (
