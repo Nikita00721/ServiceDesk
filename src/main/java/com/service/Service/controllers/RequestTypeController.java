@@ -24,12 +24,6 @@ public class RequestTypeController {
         this.requestRepository = requestRepository;
     }
 
-//    @GetMapping("/")
-//    public ResponseEntity<List<RequestType>> getAllTypes() {
-//        List<RequestType> requestTypes = (List<RequestType>) requestTypeRepository.findAll();
-//        return ResponseEntity.ok(requestTypes);
-//    }
-
     @PostMapping("/")
     public ResponseEntity<RequestType> addType(@RequestBody RequestType requestType) {
         if (requestType.getName().isEmpty() || requestType.getDescription().isEmpty()) {

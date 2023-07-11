@@ -11,7 +11,7 @@ const Home = () => {
       .catch(error => console.error('Error:', error));
   }, []);
 
-  return (
+ return (
     <div>
       <h1>Главная страница</h1>
       {/* Render request types */}
