@@ -1,11 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Home from './Home';
-import RequestEdit from './RequestEdit';
-import RequestByType from './RequestByType';
-import TypeEdit from './TypeEdit';
-import Types from './Types';
+import Home from './components/pages/Home';
+import RequestEdit from './components/pages/RequestEdit';
+import RequestByType from './components/pages/RequestByType';
+import TypeEdit from './components/pages/TypeEdit';
+import Types from './components/pages/Types';
 
 
 ReactDOM.render(

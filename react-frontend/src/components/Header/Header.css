@@ -1,0 +1,16 @@
+.btn{
+    position: relative;
+    padding: 5px 20px;
+    margin-left: 3vi;
+    display: flex;
+    margin-bottom: .5vi;
+    background: rgba(255, 135, 135, 0.658);
+    border-radius: 10px;
+    justify-content: center;
+    align-items: center;
+    filter: drop-shadow(4px 4px 10px white);
+    box-shadow: inset 10px 10px 10px rgba(0, 0, 0, 0.05),
+    15px 25px 10px rgba(0, 0, 0, 0.05),
+    13px 10px 10px  rgba(0, 0, 0, 0.05),
+    inset -10px -10px -15px rgba(255, 255, 255, 0.9);
+}
