@@ -32,7 +32,7 @@ public class RequestTypeController {
     @GetMapping(produces = MediaType.TEXT_HTML_VALUE)
     public ResponseEntity<byte[]> getIndexHtml() {
         try {
-            ClassPathResource resource = new ClassPathResource("my-app/public/index.html");
+            ClassPathResource resource = new ClassPathResource("public/index.html");
             byte[] indexHtml = Files.readAllBytes(Path.of(resource.getURI()));
             return ResponseEntity.ok(indexHtml);
         } catch (IOException e) {
