@@ -4,24 +4,19 @@ import com.service.Service.models.RequestType;
 import com.service.Service.repo.RequestRepository;
 import com.service.Service.repo.RequestTypeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.http.MediaType;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 @RestController
-@RequestMapping("/")
+@RequestMapping("/api/types")
 public class RequestTypeController {
-    private final RequestTypeRepository requestTypeRepository;
-    private final RequestRepository requestRepository;
+    private RequestTypeRepository requestTypeRepository;
+    private RequestRepository requestRepository;
 
     @Autowired
     public RequestTypeController(RequestTypeRepository requestTypeRepository, RequestRepository requestRepository) {
@@ -29,67 +24,50 @@ public class RequestTypeController {
         this.requestRepository = requestRepository;
     }
 
-    @GetMapping(produces = MediaType.TEXT_HTML_VALUE)
-    public ResponseEntity<byte[]> getIndexHtml() {
-        try {
-            ClassPathResource resource = new ClassPathResource("public/index.html");
-            byte[] indexHtml = Files.readAllBytes(Path.of(resource.getURI()));
-            return ResponseEntity.ok(indexHtml);
-        } catch (IOException e) {
-            return ResponseEntity.status(500).build();
-        }
-    }
-    @GetMapping
-    public ResponseEntity<List<RequestType>> getAllTypes() {
-        List<RequestType> requestTypes = StreamSupport.stream(requestTypeRepository.findAll().spliterator(), false)
-                .collect(Collectors.toList());
-        return ResponseEntity.ok(requestTypes);
-    }
+//    @GetMapping("/")
+//    public ResponseEntity<List<RequestType>> getAllTypes() {
+//        List<RequestType> requestTypes = (List<RequestType>) requestTypeRepository.findAll();
+//        return ResponseEntity.ok(requestTypes);
+//    }
 
-
-
-    @PostMapping
-    public ResponseEntity<RequestType> createType(@RequestBody RequestType requestType) {
-        if (requestType.getName() == null || requestType.getDescription() == null) {
+    @PostMapping("/")
+    public ResponseEntity<RequestType> addType(@RequestBody RequestType requestType) {
+        if (requestType.getName().isEmpty() || requestType.getDescription().isEmpty()) {
             return ResponseEntity.badRequest().build();
         }
-        RequestType createdType = requestTypeRepository.save(requestType);
-        return ResponseEntity.ok(createdType);
-    }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<RequestType> getTypeById(@PathVariable Long id) {
-        Optional<RequestType> requestTypeOptional = requestTypeRepository.findById(id);
-        return requestTypeOptional.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<RequestType> updateType(@PathVariable Long id, @RequestBody RequestType updatedType) {
-        Optional<RequestType> requestTypeOptional = requestTypeRepository.findById(id);
-        if (requestTypeOptional.isPresent()) {
-            RequestType existingType = requestTypeOptional.get();
-            existingType.setName(updatedType.getName());
-            existingType.setDescription(updatedType.getDescription());
-            RequestType savedType = requestTypeRepository.save(existingType);
-            return ResponseEntity.ok(savedType);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        RequestType savedRequestType = requestTypeRepository.save(requestType);
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedRequestType);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteType(@PathVariable Long id) {
         Optional<RequestType> requestTypeOptional = requestTypeRepository.findById(id);
-        if (requestTypeOptional.isPresent()) {
-            RequestType requestType = requestTypeOptional.get();
-            if (requestRepository.findByRequestType(requestType).isEmpty()) {
-                requestTypeRepository.deleteById(id);
-                return ResponseEntity.noContent().build();
-            } else {
-                return ResponseEntity.badRequest().build();
-            }
-        } else {
+        if (requestTypeOptional.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
+
+        RequestType requestType = requestTypeOptional.get();
+        if (!requestRepository.findByRequestType(requestType).isEmpty()) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        }
+
+        requestTypeRepository.deleteById(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<RequestType> updateType(@PathVariable Long id, @RequestBody RequestType updatedRequestType) {
+        Optional<RequestType> requestTypeOptional = requestTypeRepository.findById(id);
+        if (requestTypeOptional.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        RequestType existingRequestType = requestTypeOptional.get();
+        existingRequestType.setName(updatedRequestType.getName());
+        existingRequestType.setDescription(updatedRequestType.getDescription());
+
+        RequestType savedRequestType = requestTypeRepository.save(existingRequestType);
+        return ResponseEntity.ok(savedRequestType);
     }
 }

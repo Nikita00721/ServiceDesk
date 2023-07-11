@@ -3,99 +3,90 @@ package com.service.Service.controllers;
 import com.service.Service.models.Request;
 import com.service.Service.models.RequestType;
 import com.service.Service.repo.RequestRepository;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
 import com.service.Service.repo.RequestTypeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 @RestController
 @RequestMapping("/api/requests")
 public class RequestController {
-    @Autowired
-    private RequestTypeRepository requestTypeRepository;
     private RequestRepository requestRepository;
+    private RequestTypeRepository requestTypeRepository;
 
-    public RequestController(RequestRepository requestRepository) {
+    @Autowired
+    public RequestController(RequestRepository requestRepository, RequestTypeRepository requestTypeRepository) {
         this.requestRepository = requestRepository;
+        this.requestTypeRepository = requestTypeRepository;
     }
 
-    @GetMapping
-    public ResponseEntity<List<Request>> getAllRequests() {
-        List<Request> requests = StreamSupport.stream(requestRepository.findAll().spliterator(), false)
-                .collect(Collectors.toList());
-        return ResponseEntity.ok(requests);
-    }
+    @PostMapping("/add")
+    public ResponseEntity<String> addRequest(@RequestBody Request request) {
+        try {
+            Optional<RequestType> requestTypeOptional = requestTypeRepository.findById(request.getRequestType().getId());
+            if (!requestTypeOptional.isPresent()) {
+                throw new IllegalArgumentException("Invalid request type");
+            }
 
-    @PostMapping
-    public ResponseEntity<Request> addRequest(@RequestBody Request request) {
-        if (request.getRequestType() == null) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            RequestType selectedRequestType = requestTypeOptional.get();
+            request.setRequestType(selectedRequestType);
+            request.setSubmissionDate(new Date());
+
+            Request savedRequest = requestRepository.save(request);
+            return ResponseEntity.ok("Request added successfully");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body("Invalid request type");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred");
         }
+    }
 
-        Optional<RequestType> requestTypeOptional = requestTypeRepository.findById(request.getRequestType().getId());
+    @GetMapping("/{requestTypeId}")
+    public List<Request> getRequestsByType(@PathVariable Long requestTypeId) {
+        Optional<RequestType> requestTypeOptional = requestTypeRepository.findById(requestTypeId);
         if (requestTypeOptional.isPresent()) {
             RequestType requestType = requestTypeOptional.get();
-            request.setRequestType(requestType);
-            request.setSubmissionDate(new Date());
-            Request savedRequest = requestRepository.save(request);
-            return new ResponseEntity<>(savedRequest, HttpStatus.CREATED);
+            return requestRepository.findByRequestType(requestType);
         }
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<Request> getRequestById(@PathVariable("id") Long id) {
-        Optional<Request> requestOptional = requestRepository.findById(id);
-        if (requestOptional.isPresent()) {
-            Request request = requestOptional.get();
-            return new ResponseEntity<>(request, HttpStatus.OK);
-        }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<Request> updateRequest(@PathVariable("id") Long id, @RequestBody Request updatedRequest) {
-        RequestType requestType = updatedRequest.getRequestType();
-        if (requestType == null) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-
-        Optional<Request> requestOptional = requestRepository.findById(id);
-        if (requestOptional.isPresent()) {
-            Request request = requestOptional.get();
-            Optional<RequestType> requestTypeOptional = requestTypeRepository.findById(requestType.getId());
-            if (requestTypeOptional.isPresent()) {
-                request.setFullName(updatedRequest.getFullName());
-                request.setEmail(updatedRequest.getEmail());
-                request.setDescription(updatedRequest.getDescription());
-                request.setRequestType(requestType);
-                Request savedRequest = requestRepository.save(request);
-                return new ResponseEntity<>(savedRequest, HttpStatus.OK);
-            }
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return null;
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<HttpStatus> deleteRequest(@PathVariable("id") Long id) {
-        Optional<Request> requestOptional = requestRepository.findById(id);
-        if (requestOptional.isPresent()) {
-            Request request = requestOptional.get();
-            requestRepository.delete(request);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    public void deleteRequest(@PathVariable(value = "id") long id) {
+        Request deleteRequest = requestRepository.findById(id).orElseThrow();
+        requestRepository.delete(deleteRequest);
     }
+
+    @PutMapping("/update")
+    public ResponseEntity<String> updateRequest(@RequestBody Request updatedRequest) {
+        try {
+            if (updatedRequest.getRequestType() == null) {
+                throw new IllegalArgumentException("Invalid request type");
+            }
+
+            RequestType requestType = requestTypeRepository.findById(updatedRequest.getRequestType().getId())
+                    .orElseThrow(() -> new IllegalArgumentException("Invalid request type id: " + updatedRequest.getRequestType().getId()));
+
+            Request existingRequest = requestRepository.findById(updatedRequest.getId())
+                    .orElseThrow(() -> new IllegalArgumentException("Invalid request id: " + updatedRequest.getId()));
+
+            existingRequest.setFullName(updatedRequest.getFullName());
+            existingRequest.setEmail(updatedRequest.getEmail());
+            existingRequest.setDescription(updatedRequest.getDescription());
+            existingRequest.setRequestType(requestType);
+
+            Request savedRequest = requestRepository.save(existingRequest);
+            return ResponseEntity.ok("Request updated successfully");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body("Invalid request type or request id");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred");
+        }
+    }
+
 }
