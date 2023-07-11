@@ -1,48 +1,110 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import RequestTypeService from '../../services/RequestTypeService';
+import Modal from 'react-modal';
 
 const Types = () => {
-  const [reqtypes, setReqtypes] = useState([]);
+  const [requestTypes, setRequestTypes] = useState([]);
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [newType, setNewType] = useState({
+    name: '',
+    description: '',
+  });
 
   useEffect(() => {
-    // Fetch request types from the server
-    fetch('/api/types')
-      .then(response => response.json())
-      .then(data => setReqtypes(data))
-      .catch(error => console.error('Error:', error));
+    fetchRequestTypes();
   }, []);
 
-  const handleDeleteType = (typeId) => {
-    // Perform type deletion logic here
-    // ...
+  const fetchRequestTypes = async () => {
+    try {
+      const response = await RequestTypeService.getRequestTypes();
+      setRequestTypes(response.data);
+    } catch (error) {
+      console.error('Error fetching request types:', error);
+    }
+  };
+
+  const openModal = () => {
+    setModalIsOpen(true);
+  };
+
+  const closeModal = () => {
+    setModalIsOpen(false);
+    setNewType({ name: '', description: '' });
+  };
+
+  const handleInputChange = (e) => {
+    setNewType({ ...newType, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      await RequestTypeService.addType(newType);
+      closeModal();
+      fetchRequestTypes();
+    } catch (error) {
+      console.error('Error adding request type:', error);
+    }
+  };
+
+  const handleDelete = async (id) => {
+    try {
+      await RequestTypeService.deleteType(id);
+      fetchRequestTypes();
+    } catch (error) {
+      console.error('Error deleting request type:', error);
+    }
   };
 
   return (
     <div>
       <h1>Типы заявок</h1>
-      <button
-        type="button"
-        className="btn btn-primary mt-3"
-        data-bs-toggle="modal"
-        data-bs-target="#addRequestTypeModal"
-      >
-        Добавить тип
+      <button>
+        <Link to="/">Главная</Link>
       </button>
-      <a href="/" className="link">Главная</a>
-      <div className="container mt-5">
-        {reqtypes.map(reqtype => (
-          <div key={reqtype.id} className="alert alert-info mt-2">
-            <h3>{reqtype.name}</h3>
-            <p>{reqtype.description}</p>
-            <a href={`/${reqtype.id}/type-edit`} className="btn btn-warning">Редактировать</a><br />
-            <form onSubmit={() => handleDeleteType(reqtype.id)}>
-              <button type="submit">Удалить</button>
-            </form>
-          </div>
+      <button onClick={openModal}>Добавить тип</button>
+      <ul>
+        {requestTypes.map((type) => (
+          <li key={type.id}>
+            <p>Название: {type.name}</p>
+            <p>Описание: {type.description}</p>
+            <button>
+              <Link to={`/types/${type.id}/edit`}>Редактировать</Link>
+            </button>
+            <button onClick={() => handleDelete(type.id)}>Удалить</button>
+          </li>
         ))}
-      </div>
-      <div className="modal fade" id="addRequestTypeModal" tabIndex="-1" aria-labelledby="addRequestTypeModalLabel" aria-hidden="true">
-        {/* Add request type modal */}
-      </div>
+      </ul>
+      <Modal isOpen={modalIsOpen} onRequestClose={closeModal}>
+        <h2>Добавить тип заявки</h2>
+        <form onSubmit={handleSubmit}>
+          <div>
+            <label>Название:</label>
+            <input
+              type="text"
+              name="name"
+              value={newType.name}
+              onChange={handleInputChange}
+              required
+            />
+          </div>
+          <div>
+            <label>Описание:</label>
+            <textarea
+              name="description"
+              value={newType.description}
+              onChange={handleInputChange}
+              required
+            ></textarea>
+          </div>
+          <button type="submit">Сохранить</button>
+          <button type="button" onClick={closeModal}>
+            Закрыть
+          </button>
+        </form>
+      </Modal>
     </div>
   );
 };

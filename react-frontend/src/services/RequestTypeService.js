@@ -1,4 +1,5 @@
 import axios from 'axios';
+
 const baseURL = 'http://localhost:8082';
 
 class RequestTypeService {
@@ -6,6 +7,10 @@ class RequestTypeService {
     this.axiosInstance = axios.create({
       baseURL: `${baseURL}/api/types`,
     });
+  }
+
+  getRequestTypes() {
+    return this.axiosInstance.get('/');
   }
 
   addType(requestType) {

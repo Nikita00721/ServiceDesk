@@ -1,59 +1,130 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import RequestTypeService from '../../services/RequestTypeService';
+import Modal from 'react-modal';
 
-function Form() {
-  const [requestType, setRequestType] = useState("");
-  const [fullName, setFullName] = useState("");
-  const [email, setEmail] = useState("");
-  const [description, setDescription] = useState("");
+const Home = () => {
+  const [requestTypes, setRequestTypes] = useState([]);
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [selectedType, setSelectedType] = useState('');
+  const [fullName, setFullName] = useState('');
+  const [email, setEmail] = useState('');
+  const [description, setDescription] = useState('');
 
-  const handleAddRequest = (e) => {
+  useEffect(() => {
+    fetchRequestTypes();
+  }, []);
+
+  const fetchRequestTypes = async () => {
+    try {
+      const response = await RequestTypeService.getRequestTypes();
+      setRequestTypes(response.data);
+    } catch (error) {
+      console.error('Error fetching request types:', error);
+    }
+  };
+
+  const openModal = () => {
+    setModalIsOpen(true);
+  };
+
+  const closeModal = () => {
+    setModalIsOpen(false);
+    setSelectedType('');
+    setFullName('');
+    setEmail('');
+    setDescription('');
+  };
+
+  const handleTypeClick = (typeId) => {
+    // Дополнительная логика при клике на тип заявки
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Отправка данных на сервер или другая логика обработки формы
-    console.log({
-      requestType,
-      fullName,
-      email,
-      description
-    });
+    try {
+      const request = {
+        requestType: selectedType,
+        fullName,
+        email,
+        description,
+      };
 
-    // Очистка полей формы
-    setRequestType("");
-    setFullName("");
-    setEmail("");
-    setDescription("");
+      // Отправка запроса на добавление заявки
+      // Используйте соответствующий метод из RequestService
+    } catch (error) {
+      console.error('Error adding request:', error);
+    }
   };
 
   return (
-    <form onSubmit={handleAddRequest}>
-      <label>
-        Тип заявки:
-        <select name="requestType" value={requestType} onChange={(e) => setRequestType(e.target.value)}>
-          <option value="">Выберите тип заявки</option>
-          <option value="Техническая поддержка">Техническая поддержка</option>
-          <option value="Запрос на информацию">Запрос на информацию</option>
-          <option value="Жалоба">Жалоба</option>
-        </select>
-      </label>
-      <br />
-      <label>
-        ФИО:
-        <input type="text" name="fullName" value={fullName} onChange={(e) => setFullName(e.target.value)} />
-      </label>
-      <br />
-      <label>
-        Email:
-        <input type="email" name="email" value={email} onChange={(e) => setEmail(e.target.value)} />
-      </label>
-      <br />
-      <label>
-        Описание заявки:
-        <textarea name="description" value={description} onChange={(e) => setDescription(e.target.value)} />
-      </label>
-      <br />
-      <button type="submit">Сохранить</button>
-    </form>
+    <div>
+      <h1>Home</h1>
+      <button>
+        <Link to="/types">Работа с типами</Link>
+      </button>
+      <button onClick={openModal}>Добавить заявку</button>
+      <ul>
+        {requestTypes.map((type) => (
+          <li key={type.id} onClick={() => handleTypeClick(type.id)}>
+            <Link to={`/requests/${type.id}`}>{type.name}</Link>
+            <p>{type.description}</p>
+          </li>
+        ))}
+      </ul>
+      <Modal isOpen={modalIsOpen} onRequestClose={closeModal}>
+        <h2>Добавить заявку</h2>
+        <form onSubmit={handleSubmit}>
+          <div>
+            <label>Тип заявки:</label>
+            <select
+              value={selectedType}
+              onChange={(e) => setSelectedType(e.target.value)}
+              required
+            >
+              <option value="">Выберите тип заявки</option>
+              {requestTypes.map((type) => (
+                <option key={type.id} value={type.id}>
+                  {type.name}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div>
+            <label>ФИО:</label>
+            <input
+              type="text"
+              value={fullName}
+              onChange={(e) => setFullName(e.target.value)}
+              required
+            />
+          </div>
+          <div>
+            <label>Email:</label>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </div>
+          <div>
+            <label>Описание заявки:</label>
+            <textarea
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              required
+            ></textarea>
+          </div>
+          <button type="submit">Сохранить</button>
+          <button type="button" onClick={closeModal}>
+            Закрыть
+          </button>
+        </form>
+      </Modal>
+    </div>
   );
-}
+};
 
-export default Form;
+export default Home;
