@@ -7,14 +7,13 @@ import Modal from 'react-modal';
 Modal.setAppElement('#root');
 
 const Home = () => {
+  const navigate = useNavigate();
   const [requestTypes, setRequestTypes] = useState([]);
-  const [requestTypeCounts, setRequestTypeCounts] = useState({});
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [selectedType, setSelectedType] = useState('');
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [description, setDescription] = useState('');
-  const navigate = useNavigate();
 
   useEffect(() => {
     fetchRequestTypes();
@@ -23,12 +22,17 @@ const Home = () => {
   const fetchRequestTypes = async () => {
     try {
       const response = await RequestTypeService.getRequestTypes();
-      setRequestTypes(response.data);
-      const counts = {};
-      response.data.forEach((type) => {
-        counts[type.id] = type.requestSet.length;
-      });
-      setRequestTypeCounts(counts);
+      const types = response.data;
+
+      const typesWithCounts = await Promise.all(
+        types.map(async (type) => {
+          const response = await RequestService.getRequestsByType(type.id);
+          const requests = response.data;
+          return { ...type, requests, count: requests.length };
+        })
+      );
+
+      setRequestTypes(typesWithCounts);
     } catch (error) {
       console.error('Error fetching request types:', error);
     }
@@ -47,29 +51,27 @@ const Home = () => {
   };
 
   const handleTypeClick = (typeId) => {
-    navigate(`/requests/type/${typeId}`);
+    navigate(`/requests/types/${typeId}`);
   };
 
-const handleSubmit = async (e) => {
-  e.preventDefault();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-  try {
-    const request = {
-      requestTypeId: selectedType,
-      fullName,
-      email,
-      description,
-    };
+    try {
+      const request = {
+        requestTypeId: selectedType,
+        fullName,
+        email,
+        description,
+      };
 
-    await RequestService.addRequest(request);
-    closeModal();
-    fetchRequestTypes();
-  } catch (error) {
-    console.error('Error adding request:', error);
-  }
-};
-
-
+      await RequestService.addRequest(request);
+      closeModal();
+      fetchRequestTypes();
+    } catch (error) {
+      console.error('Error adding request:', error);
+    }
+  };
 
   return (
     <div>
@@ -81,12 +83,13 @@ const handleSubmit = async (e) => {
       <ul>
         {requestTypes.map((type) => (
           <li key={type.id} onClick={() => handleTypeClick(type.id)}>
-            <Link to={`/requests/${type.id}`}>{type.name}</Link>
+            <div>{type.name}</div>
             <p>{type.description}</p>
-            <p>Количество заявок: {requestTypeCounts[type.id]}</p>
+            <p>Количество заявок: {type.count}</p>
           </li>
         ))}
       </ul>
+
       <Modal isOpen={modalIsOpen} onRequestClose={closeModal}>
         <h2>Добавить заявку</h2>
         <form onSubmit={handleSubmit}>

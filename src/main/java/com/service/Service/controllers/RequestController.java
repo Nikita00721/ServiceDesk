@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -47,15 +48,22 @@ public class RequestController {
         }
     }
 
-    @GetMapping("/{requestTypeId}")
-    public List<Request> getRequestsByType(@PathVariable Long requestTypeId) {
-        Optional<RequestType> requestTypeOptional = requestTypeRepository.findById(requestTypeId);
-        if (requestTypeOptional.isPresent()) {
-            RequestType requestType = requestTypeOptional.get();
-            return requestRepository.findByRequestType(requestType);
+    @GetMapping("/type/{requestTypeId}")
+    public ResponseEntity<List<Request>> getRequestsByType(@PathVariable("requestTypeId") Long requestTypeId) {
+        try {
+            Optional<RequestType> requestTypeOptional = requestTypeRepository.findById(requestTypeId);
+            if (requestTypeOptional.isPresent()) {
+                RequestType requestType = requestTypeOptional.get();
+                List<Request> requests = requestRepository.findByRequestType(requestType);
+                return ResponseEntity.ok(requests);
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ArrayList<>());
         }
-        return null;
     }
+
 
     @DeleteMapping("/{id}")
     public void deleteRequest(@PathVariable(value = "id") long id) {
@@ -89,5 +97,4 @@ public class RequestController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred");
         }
     }
-
 }

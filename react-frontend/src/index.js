@@ -11,10 +11,10 @@ ReactDOM.render(
   <BrowserRouter>
     <Routes>
       <Route path="/" element={<Home />} />
-      <Route path="/request-edit/:id" element={<RequestEdit />} />
-      <Route path="/request-by-type/:id" element={<RequestByType />} />
-      <Route path="/type-edit/:id" element={<TypeEdit />} />
+      <Route path="/requests/types/:typeId" element={<RequestByType />} />
+      <Route path="/requests/:id/edit" element={<RequestEdit />} />
       <Route path="/types" element={<Types />} />
+      <Route path="/types/:id/edit" element={<TypeEdit />} />
     </Routes>
   </BrowserRouter>,
   document.getElementById('root')

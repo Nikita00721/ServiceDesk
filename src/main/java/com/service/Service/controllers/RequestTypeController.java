@@ -25,13 +25,21 @@ public class RequestTypeController {
         this.requestRepository = requestRepository;
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<RequestType> getTypeById(@PathVariable("id") Long id) {
+        Optional<RequestType> requestTypeOptional = requestTypeRepository.findById(id);
+        if (requestTypeOptional.isPresent()) {
+            RequestType requestType = requestTypeOptional.get();
+            return ResponseEntity.ok(requestType);
+        }
+        return ResponseEntity.notFound().build();
+    }
+
     @GetMapping("/")
     public ResponseEntity<Iterable<RequestType>> getAllTypes() {
         Iterable<RequestType> requestTypes = requestTypeRepository.findAll();
         return ResponseEntity.ok(requestTypes);
     }
-
-
 
     @PostMapping("/")
     public ResponseEntity<RequestType> addType(@RequestBody RequestType requestType) {

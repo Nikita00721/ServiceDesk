@@ -12,9 +12,10 @@ class RequestService {
     return this.axiosInstance.post('/add', request);
   }
 
-  getRequestsByType(requestTypeId) {
-    return this.axiosInstance.get(`/${requestTypeId}`);
-  }
+    getRequestsByType(requestTypeId) {
+      return this.axiosInstance.get(`/type/${requestTypeId}`);
+    }
+
 
   deleteRequest(id) {
     return this.axiosInstance.delete(`/${id}`);
