@@ -29,7 +29,7 @@ public class RequestController {
     @PostMapping("/add")
     public ResponseEntity<String> addRequest(@RequestBody Request request) {
         try {
-            Optional<RequestType> requestTypeOptional = requestTypeRepository.findById(request.getRequestType().getId());
+            Optional<RequestType> requestTypeOptional = requestTypeRepository.findById(request.getRequestTypeId());
             if (!requestTypeOptional.isPresent()) {
                 throw new IllegalArgumentException("Invalid request type");
             }

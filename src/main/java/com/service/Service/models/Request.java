@@ -1,5 +1,6 @@
 package com.service.Service.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.util.Date;
@@ -20,7 +21,7 @@ public class Request {
     private Date submissionDate;
 
     private String description;
-
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "type_id")
     private RequestType requestType;
@@ -72,6 +73,15 @@ public class Request {
 
     public void setRequestType(RequestType requestType) {
         this.requestType = requestType;
+    }
+
+    public Long getRequestTypeId() {
+        return requestType != null ? requestType.getId() : null;
+    }
+
+    public void setRequestTypeId(Long requestTypeId) {
+        this.requestType = new RequestType();
+        this.requestType.setId(requestTypeId);
     }
 
     public Request() {

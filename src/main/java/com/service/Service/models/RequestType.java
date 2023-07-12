@@ -1,5 +1,6 @@
 package com.service.Service.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -16,7 +17,7 @@ public class RequestType {
     private String name;
 
     private String description;
-
+    @JsonIgnore
     @OneToMany(mappedBy = "requestType", fetch = FetchType.EAGER)
     private Set<Request> requestSet;
 

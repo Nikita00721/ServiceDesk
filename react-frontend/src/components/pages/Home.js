@@ -1,15 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import RequestTypeService from '../../services/RequestTypeService';
+import RequestService from '../../services/RequestService';
 import Modal from 'react-modal';
+
+Modal.setAppElement('#root');
 
 const Home = () => {
   const [requestTypes, setRequestTypes] = useState([]);
+  const [requestTypeCounts, setRequestTypeCounts] = useState({});
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [selectedType, setSelectedType] = useState('');
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [description, setDescription] = useState('');
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchRequestTypes();
@@ -19,6 +24,11 @@ const Home = () => {
     try {
       const response = await RequestTypeService.getRequestTypes();
       setRequestTypes(response.data);
+      const counts = {};
+      response.data.forEach((type) => {
+        counts[type.id] = type.requestSet.length;
+      });
+      setRequestTypeCounts(counts);
     } catch (error) {
       console.error('Error fetching request types:', error);
     }
@@ -37,26 +47,29 @@ const Home = () => {
   };
 
   const handleTypeClick = (typeId) => {
-    // Дополнительная логика при клике на тип заявки
+    navigate(`/requests/type/${typeId}`);
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+const handleSubmit = async (e) => {
+  e.preventDefault();
 
-    try {
-      const request = {
-        requestType: selectedType,
-        fullName,
-        email,
-        description,
-      };
+  try {
+    const request = {
+      requestTypeId: selectedType,
+      fullName,
+      email,
+      description,
+    };
 
-      // Отправка запроса на добавление заявки
-      // Используйте соответствующий метод из RequestService
-    } catch (error) {
-      console.error('Error adding request:', error);
-    }
-  };
+    await RequestService.addRequest(request);
+    closeModal();
+    fetchRequestTypes();
+  } catch (error) {
+    console.error('Error adding request:', error);
+  }
+};
+
+
 
   return (
     <div>
@@ -70,6 +83,7 @@ const Home = () => {
           <li key={type.id} onClick={() => handleTypeClick(type.id)}>
             <Link to={`/requests/${type.id}`}>{type.name}</Link>
             <p>{type.description}</p>
+            <p>Количество заявок: {requestTypeCounts[type.id]}</p>
           </li>
         ))}
       </ul>
