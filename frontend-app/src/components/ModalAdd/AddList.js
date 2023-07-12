@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { AiOutlineCloseCircle } from "react-icons/ai";
-import ModalConfirmation from "./ModalConfirm";
+import axios from "axios";
 import ModalForm from "./ModalForm";
 import ModalInfo from "./ModalInfo";
 import "./Modal.css"
@@ -13,6 +13,7 @@ function AddList({ modal, setModal }) {
     const [email, setEmail] = useState("")
     const [emailError, setEmailError] = useState("")
     const [titleError, setTitleError] = useState("")
+    
 
 
     const isFormValid = valueTitle !== "" && valueDes !== "" && type !== "" && email !== "" ;
@@ -71,13 +72,36 @@ function AddList({ modal, setModal }) {
             setReq((prevReq) => [...prevReq, newReq]);
             
         }
-
-        setEmailError("");
         setValueTitle("");
-        setValueDes("");
-        setType("");
-        setEmail("");
-        setModal(false);
+            setValueDes("");
+            setType("");
+            setEmail("");
+            setModal(false);
+
+        // try {
+        //     const response = await fetch("/api/requests", {
+        //     method: "POST",
+        //     headers: {
+        //     "Content-Type": "application/json",
+        //     },
+        //     body: JSON.stringify(newReq),
+        //     });
+            
+        //     if (!response.ok) {
+        //     throw new Error("Failed to create request");
+        //     }
+            
+        //     const createdRequest = await response.json();
+        //     setReq((prevReq) => [...prevReq, createdRequest]);
+            
+        //     setValueTitle("");
+        //     setValueDes("");
+        //     setType("");
+        //     setEmail("");
+        //     setModal(false);
+        //     } catch (error) {
+        //     console.error(error);
+        //     }
     };
 
     const handleClose = () => {

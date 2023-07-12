@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { LuHome } from "react-icons/lu"
 import "./Header.css"
-import { CiSquareQuestion } from "react-icons/ci"
 import { useNavigate, useLocation, Link } from "react-router-dom"
 // import ModalTypeForm from "../Modal/ModalTypeForm"
 

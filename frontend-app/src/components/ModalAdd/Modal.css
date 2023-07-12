@@ -94,12 +94,10 @@
     
 }
 .items-info{
-    /* position: relative; */
     display: flex;
     flex-wrap: wrap;
     align-items: flex-start;
     justify-content: space-between;
-    /* align-items: center; */
 }
 .nothing{
     position: relative;

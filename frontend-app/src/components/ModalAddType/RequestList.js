@@ -2,7 +2,10 @@ import React from "react";
 import { AiOutlineDelete } from "react-icons/ai"
 import { AiOutlineEdit } from "react-icons/ai"
 
-function RequestList({ reqType, handleEdit, handleDelete }) {
+
+function RequestList({ reqType,handleEdit, handleDelete }) {
+   
+
     return (
         <div>
             <h2 className="flex justify-center text-2xl mt-2">Типы заявок</h2>
@@ -32,7 +35,11 @@ function RequestList({ reqType, handleEdit, handleDelete }) {
                         </li>
                     ))}
                 </ul>
-            ) : (<p className="nothing">У вас пока нет заявок<br />Добавьте типы, пожалуйста</p>)}
+            ) : (
+                <div>
+            <p className="nothing">У вас пока нет заявок<br />Добавьте типы, пожалуйста</p>
+            </div>
+            )}
 
 
 

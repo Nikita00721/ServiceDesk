@@ -3,14 +3,22 @@ import ModalTypeForm from "./ModalTypeForm";
 import { AiOutlineCloseCircle } from "react-icons/ai";
 import RequestList from "./RequestList";
 import ModalConfirmation from "../ModalAdd/ModalConfirm";
+import { useNavigate } from "react-router-dom";
 
-function ModalType({showModalType,setShowModalType}){
+function ModalType({
+    showModalType,
+    setShowModalType
+})
+{
     const [typeTitleError,setTypeTitleError] = useState("")
     const [reqType,setReqType]=useState([])
     const [valueDesType,setValueDesType]=useState("")
-    const [typeTitle,setTypeTitle]=useState("")
+  const [typeTitle,setTypeTitle]=useState("")
+  const isFormValidType = typeTitle!==""&&valueDesType!=="" ;
     const [showConfirm, setShowConfirm] = useState(false);
-    const isFormValidType = typeTitle!==""&&valueDesType!=="" ;
+    const editPage=useNavigate()
+
+
     const validTitleType = (typeTitle) => {
         const titleRe = /^[a-zA-Zа-яА-Я]+$/;
         return titleRe.test(typeTitle)
@@ -26,14 +34,13 @@ function ModalType({showModalType,setShowModalType}){
         setShowConfirm(false);
     };
     const handleEdit = (index) => {
-        if (reqType[index]) {
-            const { typeTitle,typeDes } = reqType[index];
-            setTypeTitle(typeTitle)
-            setValueDesType(typeDes);
-            
-        }
+        // if (reqType[index]) {
+        //     const { typeTitle,typeDes } = reqType[index];
+        //     setTypeTitle(typeTitle)
+        //     setValueDesType(typeDes);
+            editPage("/editPageType")
+        // }
     };
-
     const handleSubmitType = (e) => {
         e.preventDefault();
 
@@ -50,26 +57,13 @@ function ModalType({showModalType,setShowModalType}){
         };
         setReqType((prevReq) => [...prevReq, newReq]);
 
-        // const existingReqIndex = reqType.findIndex((item) => item.type === newReq.type);
-
-        // if (existingReqIndex !== -1) {
-        //     setReq((prevReq) => {
-        //         const updatedReq = [...prevReq];
-        //         updatedReq[existingReqIndex] = newReq;
-        //         return updatedReq;
-        //     });
-        // } else {
-        //     setReq((prevReq) => [...prevReq, newReq]);
-            
-        // }
-
         setValueDesType("");
         setTypeTitle("")
         setShowModalType(false);
     };
     return(
         <div>
-            <RequestList reqType={reqType} handleDelete={handleDelete} handleEdit={handleEdit}/>
+            <RequestList reqType={reqType} handleEdit={handleEdit} handleDelete={handleDelete}/>
             {showConfirm && <ModalConfirmation setShowConfirm={setShowConfirm} />}
             {showModalType &&(
                 <div className="wrapper h-screen w-screen">

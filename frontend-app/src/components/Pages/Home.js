@@ -3,9 +3,10 @@ import Header from "../Header/Header";
 import AddList from "../ModalAdd/AddList";
 import axios from "axios"
 
+
 function Home({setReq}) {
   const [modal, setModal] = useState(false)
-  const [data,setData]=useState([])
+  // const [data,setData]=useState([])
 
   // useEffect(()=>{
   //   fetchData();
@@ -18,13 +19,13 @@ function Home({setReq}) {
   //     console.error("Ошибка при получении данных",error)
   //   }
   // }
-  useEffect(() => {
-    // Fetch request types from the server
-    fetch('/api/request-types')
-      .then(response => response.json())
-      .then(data => setReq(data))
-      .catch(error => console.error('Error:', error));
-  }, []);
+  // useEffect(() => {
+  //   // Fetch request types from the server
+  //   fetch('/api/request-types')
+  //     .then(response => response.json())
+  //     .then(data => setReq(data))
+  //     .catch(error => console.error('Error:', error));
+  // }, []);
 
   return (
     <div>

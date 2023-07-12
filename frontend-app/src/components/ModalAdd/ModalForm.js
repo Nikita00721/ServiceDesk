@@ -51,7 +51,6 @@ function ModalForm({
                     <button className="sub" type="submit" disabled={!isFormValid}>
                         Добавить
                     </button>
-
                 </div>
             </form>
         </div>
