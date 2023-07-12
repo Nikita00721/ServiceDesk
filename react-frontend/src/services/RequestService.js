@@ -1,4 +1,5 @@
 import axios from 'axios';
+
 const baseURL = 'http://localhost:8082';
 
 class RequestService {
@@ -12,10 +13,9 @@ class RequestService {
     return this.axiosInstance.post('/add', request);
   }
 
-    getRequestsByType(requestTypeId) {
-      return this.axiosInstance.get(`/type/${requestTypeId}`);
-    }
-
+  getRequestsByType(requestTypeId) {
+    return this.axiosInstance.get(`/type/${requestTypeId}`);
+  }
 
   deleteRequest(id) {
     return this.axiosInstance.delete(`/${id}`);
@@ -24,7 +24,10 @@ class RequestService {
   updateRequest(updatedRequest) {
     return this.axiosInstance.put('/update', updatedRequest);
   }
+
+  getRequest(id) {
+    return this.axiosInstance.get(`/${id}`);
+  }
 }
 
 export default new RequestService();
-

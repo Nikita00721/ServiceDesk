@@ -27,10 +27,29 @@ public class RequestController {
         this.requestTypeRepository = requestTypeRepository;
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<Request> getRequest(@PathVariable("id") Long id) {
+        try {
+            Optional<Request> requestOptional = requestRepository.findById(id);
+            if (requestOptional.isPresent()) {
+                Request request = requestOptional.get();
+                RequestType requestType = request.getRequestType(); // Получение типа заявки
+                request.setRequestType(requestType); // Установка типа заявки в объект заявки
+                return ResponseEntity.ok(request);
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
+
+
+
     @PostMapping("/add")
     public ResponseEntity<String> addRequest(@RequestBody Request request) {
         try {
-            Optional<RequestType> requestTypeOptional = requestTypeRepository.findById(request.getRequestTypeId());
+            Optional<RequestType> requestTypeOptional = requestTypeRepository.findById(request.getRequestType().getId());
             if (!requestTypeOptional.isPresent()) {
                 throw new IllegalArgumentException("Invalid request type");
             }
@@ -47,6 +66,7 @@ public class RequestController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred");
         }
     }
+
 
     @GetMapping("/type/{requestTypeId}")
     public ResponseEntity<List<Request>> getRequestsByType(@PathVariable("requestTypeId") Long requestTypeId) {

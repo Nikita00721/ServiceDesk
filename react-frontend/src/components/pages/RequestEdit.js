@@ -1,60 +1,106 @@
 import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import RequestService from '../../services/RequestService';
+import RequestTypeService from '../../services/RequestTypeService';
 
-const RequestEdit = ({ match }) => {
-  const requestId = match.params.id;
-  const [request, setRequest] = useState({});
-  const [reqtypes, setReqtypes] = useState([]);
+const RequestEdit = () => {
+  const { id } = useParams();
+  const { typeId } = useParams();
+  const navigate = useNavigate();
+  const [request, setRequest] = useState({
+    fullName: '',
+    email: '',
+    description: '',
+    requestType: '',
+  });
+  const [requestTypes, setRequestTypes] = useState([]);
 
   useEffect(() => {
-    // Fetch request details from the server
-    fetch(`/api/requests/${requestId}`)
-      .then(response => response.json())
-      .then(data => setRequest(data))
-      .catch(error => console.error('Error:', error));
+    fetchRequest();
+    fetchRequestTypes();
+  }, [id]);
 
-    // Fetch request types from the server
-    fetch('/api/types')
-      .then(response => response.json())
-      .then(data => setReqtypes(data))
-      .catch(error => console.error('Error:', error));
-  }, [requestId]);
+  const fetchRequest = async () => {
+    try {
+      const response = await RequestService.getRequest(id);
+      setRequest(response.data);
+    } catch (error) {
+      console.error('Error fetching request:', error);
+    }
+  };
 
-  const handleFormSubmit = (event) => {
-    event.preventDefault();
-    // Perform request update logic here
-    // ...
+  const fetchRequestTypes = async () => {
+    try {
+      const response = await RequestTypeService.getRequestTypes();
+      setRequestTypes(response.data);
+    } catch (error) {
+      console.error('Error fetching request types:', error);
+    }
+  };
+
+  const handleChange = (e) => {
+    setRequest({ ...request, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      await RequestService.updateRequest(request);
+      console.log('Request updated successfully');
+      navigate(`/requests/types/${typeId}`);
+    } catch (error) {
+      console.error('Error updating request:', error);
+    }
   };
 
   return (
     <div>
       <h1>Редактирование заявки</h1>
-      <form onSubmit={handleFormSubmit}>
-        <input type="hidden" name="id" value={request.id} />
+      <form onSubmit={handleSubmit}>
         <div>
-          <label htmlFor="requestType">Тип заявки</label>
-          <select id="requestType" name="requestType">
-            {reqtypes.map(reqtype => (
+          <label>Полное имя:</label>
+          <input
+            type="text"
+            name="fullName"
+            value={request.fullName}
+            onChange={handleChange}
+          />
+        </div>
+        <div>
+          <label>Email:</label>
+          <input
+            type="email"
+            name="email"
+            value={request.email}
+            onChange={handleChange}
+          />
+        </div>
+        <div>
+          <label>Описание:</label>
+          <textarea
+            name="description"
+            value={request.description}
+            onChange={handleChange}
+          ></textarea>
+        </div>
+        <div>
+          <label>Тип заявки:</label>
+          <select
+            name="requestType"
+            value={request.requestType}
+            onChange={handleChange}
+          >
+            <option value="">Выберите тип заявки</option>
+            {requestTypes.map((requestType) => (
               <option
-                key={reqtype.id}
-                value={reqtype.id}
-                selected={reqtype.id === request.requestType?.id}
+                key={requestType.id}
+                value={requestType.id}
+                selected={requestType.id === request.requestType} // Установка выбранной опции
               >
-                {reqtype.name}
+                {requestType.name}
               </option>
             ))}
           </select>
-        </div>
-        <div>
-          <label htmlFor="fullName">Имя</label>
-          <input type="text" id="fullName" name="fullName" value={request.fullName} />
-        </div>
-        <div>
-          <label htmlFor="email">Email</label>
-          <input type="email" id="email" name="email" value={request.email} />
-        </div>
-        <div>
-          <label htmlFor="description">Описание</label>
-          <textarea id="description" name="description" value={request.description}></textarea>
         </div>
         <button type="submit">Сохранить</button>
       </form>

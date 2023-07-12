@@ -12,7 +12,7 @@ ReactDOM.render(
     <Routes>
       <Route path="/" element={<Home />} />
       <Route path="/requests/types/:typeId" element={<RequestByType />} />
-      <Route path="/requests/:id/edit" element={<RequestEdit />} />
+      <Route path="/request-edit/:id" element={<RequestEdit />} />
       <Route path="/types" element={<Types />} />
       <Route path="/types/:id/edit" element={<TypeEdit />} />
     </Routes>
