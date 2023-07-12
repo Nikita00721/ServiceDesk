@@ -14,6 +14,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/types")
+@CrossOrigin(origins = "http://localhost:3000")
 public class RequestTypeController {
     private RequestTypeRepository requestTypeRepository;
     private RequestRepository requestRepository;
@@ -23,6 +24,14 @@ public class RequestTypeController {
         this.requestTypeRepository = requestTypeRepository;
         this.requestRepository = requestRepository;
     }
+
+    @GetMapping("/")
+    public ResponseEntity<Iterable<RequestType>> getAllTypes() {
+        Iterable<RequestType> requestTypes = requestTypeRepository.findAll();
+        return ResponseEntity.ok(requestTypes);
+    }
+
+
 
     @PostMapping("/")
     public ResponseEntity<RequestType> addType(@RequestBody RequestType requestType) {

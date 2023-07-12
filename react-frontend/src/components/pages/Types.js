@@ -15,14 +15,15 @@ const Types = () => {
     fetchRequestTypes();
   }, []);
 
-  const fetchRequestTypes = async () => {
-    try {
-      const response = await RequestTypeService.getRequestTypes();
-      setRequestTypes(response.data);
-    } catch (error) {
-      console.error('Error fetching request types:', error);
-    }
-  };
+const fetchRequestTypes = async () => {
+  try {
+    const response = await RequestTypeService.getRequestTypes();
+    setRequestTypes(response.data);
+  } catch (error) {
+    console.error('Error fetching request types:', error);
+  }
+};
+
 
   const openModal = () => {
     setModalIsOpen(true);
@@ -33,9 +34,12 @@ const Types = () => {
     setNewType({ name: '', description: '' });
   };
 
-  const handleInputChange = (e) => {
-    setNewType({ ...newType, [e.target.name]: e.target.value });
-  };
+const handleInputChange = (e) => {
+  setNewType((prevState) => ({
+    ...prevState,
+    [e.target.name]: e.target.value,
+  }));
+};
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -43,7 +47,8 @@ const Types = () => {
     try {
       await RequestTypeService.addType(newType);
       closeModal();
-      fetchRequestTypes();
+      fetchRequestTypes(); // Обновление списка типов после успешного добавления
+      setNewType({ name: '', description: '' }); // Сброс полей формы
     } catch (error) {
       console.error('Error adding request type:', error);
     }
@@ -99,7 +104,10 @@ const Types = () => {
               required
             ></textarea>
           </div>
-          <button type="submit">Сохранить</button>
+          <button type="button" onClick={handleSubmit}>
+            Сохранить
+          </button>
+
           <button type="button" onClick={closeModal}>
             Закрыть
           </button>

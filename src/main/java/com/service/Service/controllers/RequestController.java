@@ -15,6 +15,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/requests")
+@CrossOrigin(origins = "http://localhost:3000")
 public class RequestController {
     private RequestRepository requestRepository;
     private RequestTypeRepository requestTypeRepository;
