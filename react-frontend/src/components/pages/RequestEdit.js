@@ -4,15 +4,17 @@ import RequestService from '../../services/RequestService';
 import RequestTypeService from '../../services/RequestTypeService';
 
 const RequestEdit = () => {
-  const { id } = useParams();
+  const { id, requestTypeId } = useParams();
   const navigate = useNavigate();
   const [request, setRequest] = useState({
     fullName: '',
     email: '',
     description: '',
-    requestType: null, // Изменено значение по умолчанию на null
+    requestType: null,
   });
   const [requestTypes, setRequestTypes] = useState([]);
+  const [requestTypeName, setRequestTypeName] = useState('');
+  const [selectedRequestType, setSelectedRequestType] = useState(null);
 
   useEffect(() => {
     fetchRequest();
@@ -23,6 +25,7 @@ const RequestEdit = () => {
     try {
       const response = await RequestService.getRequest(id);
       setRequest(response.data);
+      setSelectedRequestType(response.data.requestType);
     } catch (error) {
       console.error('Error fetching request:', error);
     }
@@ -32,6 +35,14 @@ const RequestEdit = () => {
     try {
       const response = await RequestTypeService.getRequestTypes();
       setRequestTypes(response.data);
+      const selectedType = response.data.find((type) => type.id === parseInt(requestTypeId));
+      if (selectedType) {
+        setRequestTypeName(selectedType.name);
+        setRequest((prevRequest) => ({
+          ...prevRequest,
+          requestType: selectedType.id,
+        }));
+      }
     } catch (error) {
       console.error('Error fetching request types:', error);
     }
@@ -66,6 +77,10 @@ const RequestEdit = () => {
           />
         </div>
         <div>
+          <label>Тип заявки:</label>
+          <span>{requestTypeName ? requestTypeName : '-'}</span>
+        </div>
+        <div>
           <label>Email:</label>
           <input
             type="email"
@@ -86,15 +101,11 @@ const RequestEdit = () => {
           <label>Тип заявки:</label>
           <select
             name="requestType"
-            value={request.requestType || ''} // Добавлено преобразование null в пустую строку
+            value={request.requestType || ''}
             onChange={handleChange}
           >
-            <option value="">Выберите тип заявки</option>
             {requestTypes.map((requestType) => (
-              <option
-                key={requestType.id}
-                value={requestType.id}
-              >
+              <option key={requestType.id} value={requestType.id}>
                 {requestType.name}
               </option>
             ))}

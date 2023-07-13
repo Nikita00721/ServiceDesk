@@ -89,7 +89,7 @@ const RequestByType = () => {
             </div>
             <div>
               <button onClick={() => handleDelete(request.id)}>Удалить</button>
-              <Link to={`/request-edit/${request.id}`}>Редактировать</Link>
+<Link to={`/request-edit/${request.requestTypeId}/${request.id}`}>Редактировать</Link>
             </div>
           </li>
         ))}

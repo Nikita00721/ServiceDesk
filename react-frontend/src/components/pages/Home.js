@@ -100,7 +100,6 @@ const Home = () => {
               onChange={(e) => setSelectedType(e.target.value)}
               required
             >
-              <option value="">Выберите тип заявки</option>
               {requestTypes.map((type) => (
                 <option key={type.id} value={type.id}>
                   {type.name}
