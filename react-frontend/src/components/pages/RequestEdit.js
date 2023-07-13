@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import RequestService from '../../services/RequestService';
 import RequestTypeService from '../../services/RequestTypeService';
 
+
 const RequestEdit = () => {
   const { id, requestTypeId } = useParams();
   const navigate = useNavigate();
@@ -15,6 +16,7 @@ const RequestEdit = () => {
   const [requestTypes, setRequestTypes] = useState([]);
   const [requestTypeName, setRequestTypeName] = useState('');
   const [selectedRequestType, setSelectedRequestType] = useState(null);
+
 
   useEffect(() => {
     fetchRequest();
@@ -31,25 +33,43 @@ const RequestEdit = () => {
     }
   };
 
-  const fetchRequestTypes = async () => {
-    try {
-      const response = await RequestTypeService.getRequestTypes();
-      setRequestTypes(response.data);
-      const selectedType = response.data.find((type) => type.id === parseInt(requestTypeId));
-      if (selectedType) {
-        setRequestTypeName(selectedType.name);
-        setRequest((prevRequest) => ({
-          ...prevRequest,
-          requestType: selectedType.id,
-        }));
-      }
-    } catch (error) {
-      console.error('Error fetching request types:', error);
+const fetchRequestTypes = async () => {
+  try {
+    const response = await RequestTypeService.getRequestTypes();
+    setRequestTypes(response.data);
+    const selectedType = response.data.find((type) => type.id === parseInt(requestTypeId));
+    console.log('requestTypeId:', requestTypeId);
+    console.log('selectedType.id:', selectedType ? selectedType.id : null);
+    if (selectedType) {
+      setRequestTypeName(selectedType.name);
+      setRequest((prevRequest) => ({
+        ...prevRequest,
+        requestType: selectedType.id,
+      }));
     }
-  };
+  } catch (error) {
+    console.error('Error fetching request types:', error);
+  }
+};
+
+
 
   const handleChange = (e) => {
-    setRequest({ ...request, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+
+    if (name === 'requestType') {
+      const selectedType = requestTypes.find((type) => type.id === parseInt(value));
+
+      setRequest((prevRequest) => ({
+        ...prevRequest,
+        requestType: selectedType ? selectedType.id : null,
+      }));
+    } else {
+      setRequest((prevRequest) => ({
+        ...prevRequest,
+        [name]: value,
+      }));
+    }
   };
 
   const handleSubmit = async (e) => {
