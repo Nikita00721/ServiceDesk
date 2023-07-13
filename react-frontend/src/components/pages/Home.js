@@ -10,7 +10,7 @@ const Home = () => {
   const navigate = useNavigate();
   const [requestTypes, setRequestTypes] = useState([]);
   const [modalIsOpen, setModalIsOpen] = useState(false);
-  const [selectedType, setSelectedType] = useState('');
+  const [selectedType, setSelectedType] = useState(null);
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [description, setDescription] = useState('');
@@ -100,12 +100,14 @@ const Home = () => {
               onChange={(e) => setSelectedType(e.target.value)}
               required
             >
+              <option value="">Выберите тип заявки</option>
               {requestTypes.map((type) => (
                 <option key={type.id} value={type.id}>
                   {type.name}
                 </option>
               ))}
             </select>
+
           </div>
           <div>
             <label>ФИО:</label>
