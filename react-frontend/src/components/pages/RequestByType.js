@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import RequestService from '../../services/RequestService';
 import RequestTypeService from '../../services/RequestTypeService';
 
 const RequestByType = () => {
   const { typeId } = useParams();
+  const navigate = useNavigate();
   const [requests, setRequests] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
@@ -79,11 +80,13 @@ const RequestByType = () => {
               <strong>Описание:</strong> {request.description}
             </div>
             <div>
-              <strong>Дата подачи:</strong> {new Date(request.submissionDate).toLocaleDateString()}
+              <strong>Дата подачи:</strong>{' '}
+              {new Date(request.submissionDate).toLocaleDateString()}
             </div>
-             <div>
-                <strong>Время подачи:</strong> {new Date(request.submissionDate).toLocaleTimeString()}
-             </div>
+            <div>
+              <strong>Время подачи:</strong>{' '}
+              {new Date(request.submissionDate).toLocaleTimeString()}
+            </div>
             <div>
               <button onClick={() => handleDelete(request.id)}>Удалить</button>
               <Link to={`/request-edit/${request.id}`}>Редактировать</Link>

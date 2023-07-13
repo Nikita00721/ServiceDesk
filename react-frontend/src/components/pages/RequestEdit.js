@@ -5,13 +5,12 @@ import RequestTypeService from '../../services/RequestTypeService';
 
 const RequestEdit = () => {
   const { id } = useParams();
-  const { typeId } = useParams();
   const navigate = useNavigate();
   const [request, setRequest] = useState({
     fullName: '',
     email: '',
     description: '',
-    requestType: '',
+    requestType: null, // Изменено значение по умолчанию на null
   });
   const [requestTypes, setRequestTypes] = useState([]);
 
@@ -47,7 +46,7 @@ const RequestEdit = () => {
     try {
       await RequestService.updateRequest(request);
       console.log('Request updated successfully');
-      navigate(`/requests/types/${typeId}`);
+      navigate(`/requests/types/${request.requestType}`);
     } catch (error) {
       console.error('Error updating request:', error);
     }
@@ -87,7 +86,7 @@ const RequestEdit = () => {
           <label>Тип заявки:</label>
           <select
             name="requestType"
-            value={request.requestType}
+            value={request.requestType || ''} // Добавлено преобразование null в пустую строку
             onChange={handleChange}
           >
             <option value="">Выберите тип заявки</option>
@@ -95,7 +94,6 @@ const RequestEdit = () => {
               <option
                 key={requestType.id}
                 value={requestType.id}
-                selected={requestType.id === request.requestType} // Установка выбранной опции
               >
                 {requestType.name}
               </option>
