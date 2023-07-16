@@ -3,9 +3,10 @@ import Work from './components/Pages/Work';
 import Home from "./components/Pages/Home";
 import EditType from "./components/Pages/EditType";
 import {BrowserRouter, Routes, Route} from 'react-router-dom';
+import Requests from "./components/Pages/Requests";
 
 
-function App() {
+function App({modal,setModal}) {
   const [valueDesType,setValueDesType]=useState("")
   const [typeTitle,setTypeTitle]=useState("")
   const isFormValidType = typeTitle!==""&&valueDesType!=="" ;
@@ -28,6 +29,7 @@ function App() {
           setReqType={setReqType}
           />}>
           </Route>
+          <Route path="/reqPage" element={<Requests modal={modal} setModal={setModal}/>}></Route>
         </Routes>
     </BrowserRouter>
   );
