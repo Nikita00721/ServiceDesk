@@ -6,7 +6,7 @@ import { useNavigate, useLocation, Link } from "react-router-dom"
 // import ModalTypeForm from "../Modal/ModalTypeForm"
 
 
-function Header({ onOpen, setShowModalType }) {
+function Header({ onOpen, setModalIsOpenType }) {
 
     const [pageTitle, setPageTitle] = useState("Главная страница")
     const [buttonContent, setButtonContent] = useState({
@@ -18,11 +18,11 @@ function Header({ onOpen, setShowModalType }) {
     const location = useLocation();
 
     useEffect(() => {
-        if (location.pathname === "/working") {
+        if (location.pathname === "/types") {
             setPageTitle("Работа с типами заявок");
             setButtonContent({
                 text: "Добавить тип заявки",
-                onClick: () => setShowModalType(true)
+                onClick: () => setModalIsOpenType(true)
             });
         } else {
             setPageTitle("Главная страница");
@@ -34,13 +34,13 @@ function Header({ onOpen, setShowModalType }) {
     }, [location]);
 
     function clickReqType() {
-        if(location.pathname==="/working"){
+        if(location.pathname==="/types"){
             page("/");
         }
         else{
-            page("/working")
+            page("/types")
         }
-
+        
     }
 
 
@@ -50,7 +50,7 @@ function Header({ onOpen, setShowModalType }) {
 
 
             <div className="flex items-center">
-                <div className="ml-3 rounded-xl border-solid py-1 px-1">
+                <div className="ml-3 rounded-xl py-1 px-1 us-border">
                     <Link to="/" className="cursor-pointer"><LuHome size={24} /></Link>
                 </div>
                 <div className="text-2xl font-bold mx-2">
@@ -73,15 +73,15 @@ function Header({ onOpen, setShowModalType }) {
                 </div>
                 <div className="btn">
                     <button onClick={clickReqType}>
-                        <span>{location.pathname === "/working" ? "Главная страница" : "Работа с типами заявок"}</span>
+                        <span>{location.pathname === "/types" ? "Главная страница" : "Работа с типами заявок"}</span>
                     </button>
                 </div>
             </div>
-
+            
         </div>
 
 
 
     )
 }
-export default Header;
+export default Header

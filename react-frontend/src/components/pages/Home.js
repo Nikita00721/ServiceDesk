@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import RequestTypeService from '../../services/RequestTypeService';
 import RequestService from '../../services/RequestService';
 import Modal from 'react-modal';
+import Header from '../Header/Header';
 
 Modal.setAppElement('#root');
 
@@ -75,20 +76,33 @@ const Home = () => {
 
   return (
     <div>
-      <h1>Home</h1>
-      <button>
-        <Link to="/types">Работа с типами</Link>
-      </button>
-      <button onClick={openModal}>Добавить заявку</button>
-      <ul>
-        {requestTypes.map((type) => (
+      <Header onOpen={setModalIsOpen} />
+      <h2 className="flex justify-center text-3xl mt-2">Просмотр заявок</h2>
+      {requestTypes.length > 0 ? (
+        <ul>
+          {requestTypes.map((type) => (
+            <div className="content-req">
+              <div className="items-info">
+                <div className="request">
           <li key={type.id} onClick={() => handleTypeClick(type.id)}>
-            <div>{type.name}</div>
-            <p>{type.description}</p>
-            <p>Количество заявок: {type.count}</p>
+            <p className="text-3xl">{type.name}</p>
+            <p className="text-m">{type.description}</p>            
           </li>
+          </div>
+          <div className="count-type">
+            <p className="text-2xl">{type.count}</p>
+            </div>
+          </div>
+          </div>
         ))}
-      </ul>
+        </ul>
+      ) : (
+        <div>
+          <p className="nothing text-xl">У вас пока нет заявок<br />Если вы еще не создали типы заявок, то вам следует перейти 
+          <Link to='/types' className='text-blue-500	'>по ссылке</Link>
+            </p>
+        </div>)
+        }
 
       <Modal isOpen={modalIsOpen} onRequestClose={closeModal}>
         <h2>Добавить заявку</h2>

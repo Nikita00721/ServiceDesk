@@ -1,56 +1,87 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import RequestTypeService from '../../services/RequestTypeService';
-import Modal from 'react-modal';
+import Header from '../Header/Header';
+import { AiOutlineDelete } from "react-icons/ai"
+import { AiOutlineEdit } from "react-icons/ai"
+import TypeModal from '../Modals/TypeModal';
 
-const Types = () => {
+const Types = (type,onClose) => {
   const [requestTypes, setRequestTypes] = useState([]);
-  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [modalIsOpenType, setModalIsOpenType] = useState(false);
+  const [index, setIndex] = useState(-1);
   const [newType, setNewType] = useState({
     name: '',
     description: '',
   });
+  const [updatedType, setUpdatedType] = useState(type);
 
   useEffect(() => {
     fetchRequestTypes();
   }, []);
 
-const fetchRequestTypes = async () => {
-  try {
-    const response = await RequestTypeService.getRequestTypes();
-    setRequestTypes(response.data);
-  } catch (error) {
-    console.error('Error fetching request types:', error);
-  }
-};
-
-
-  const openModal = () => {
-    setModalIsOpen(true);
+  const fetchRequestTypes = async () => {
+    try {
+      const response = await RequestTypeService.getRequestTypes();
+      setRequestTypes(response.data);
+    } catch (error) {
+      console.error('Ошибка при обновлении типа заявки: ' + error);
+    }
   };
+
+  const handleEdit = (type) => {
+    setUpdatedType(type);
+    setModalIsOpenType(true)
+    setIndex(0)
+  };
+  const handleTypeUpdated = (updatedType) => {
+    setRequestTypes((prevTypes) =>
+      prevTypes.map((type) => (type.id === updatedType.id ? updatedType : type))
+    );
+    closeModal()
+  };
+
 
   const closeModal = () => {
-    setModalIsOpen(false);
+    setIndex(-1);
+    setModalIsOpenType(false);
     setNewType({ name: '', description: '' });
+    setUpdatedType(null);
   };
 
-const handleInputChange = (e) => {
-  setNewType((prevState) => ({
-    ...prevState,
-    [e.target.name]: e.target.value,
-  }));
-};
+  const handleInputChange = (e) => {
+    setNewType((prevState) => ({
+      ...prevState,
+      [e.target.name]: e.target.value,
+    }));
+  };
+  const handleInputUpdateChange = (e) => {
+    setUpdatedType((prevState) => ({
+      ...prevState,
+      [e.target.name]: e.target.value,
+    }));
+  };
+  const handleFormSubmit = async (event) => {
+    event.preventDefault();
 
+    try {
+      await RequestTypeService.updateType(updatedType.id, updatedType);
+      alert('Тип успешно был добавлен');
+      handleTypeUpdated(updatedType);
+      closeModal();
+    } catch (error) {
+      alert('Ошибка при редактировании типа заявки: ' + error);
+    }
+  };
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     try {
       await RequestTypeService.addType(newType);
       closeModal();
       fetchRequestTypes(); // Обновление списка типов после успешного добавления
       setNewType({ name: '', description: '' }); // Сброс полей формы
     } catch (error) {
-      console.error('Error adding request type:', error);
+      alert('Ошибка при добавлении типа заявки: ' + error);
     }
   };
 
@@ -59,60 +90,59 @@ const handleInputChange = (e) => {
       await RequestTypeService.deleteType(id);
       fetchRequestTypes();
     } catch (error) {
-      console.error('Error deleting request type:', error);
+      alert('Невозможно удалить тип заявки. Удалите, пожалуйста, все заявки этого типа: ' + error);
     }
   };
 
   return (
     <div>
-      <h1>Типы заявок</h1>
-      <button>
-        <Link to="/">Главная</Link>
-      </button>
-      <button onClick={openModal}>Добавить тип</button>
-      <ul>
-        {requestTypes.map((type) => (
-          <li key={type.id}>
-            <p>Название: {type.name}</p>
-            <p>Описание: {type.description}</p>
-            <button>
-              <Link to={`/types/${type.id}/edit`}>Редактировать</Link>
-            </button>
-            <button onClick={() => handleDelete(type.id)}>Удалить</button>
-          </li>
-        ))}
-      </ul>
-      <Modal isOpen={modalIsOpen} onRequestClose={closeModal}>
-        <h2>Добавить тип заявки</h2>
-        <form onSubmit={handleSubmit}>
-          <div>
-            <label>Название:</label>
-            <input
-              type="text"
-              name="name"
-              value={newType.name}
-              onChange={handleInputChange}
-              required
-            />
-          </div>
-          <div>
-            <label>Описание:</label>
-            <textarea
-              name="description"
-              value={newType.description}
-              onChange={handleInputChange}
-              required
-            ></textarea>
-          </div>
-          <button type="button" onClick={handleSubmit}>
-            Сохранить
-          </button>
 
-          <button type="button" onClick={closeModal}>
-            Закрыть
-          </button>
-        </form>
-      </Modal>
+      <Header onOpen={setModalIsOpenType} setModalIsOpenType={setModalIsOpenType} />
+      <h2 className="flex justify-center text-3xl mt-2">Типы заявок</h2>
+      {requestTypes.length > 0 ? (
+        <ul>
+          {requestTypes.map((type) => (
+            <div className="content-req">
+              <div className="items-info">
+                <div className="request">
+                  <li key={type.id}>
+                    <p className="text-3xl">{type.name}</p>
+                    <p className="text-m">{type.description}</p>
+                  </li>
+                </div>
+              </div>
+              <div className="actions">
+                <button className="icons edit" onClick={() => handleEdit(type)}>
+
+                  <div className="tooltip">Редактировать</div>
+                  <span><AiOutlineEdit className="icon" size={24}></AiOutlineEdit></span>
+
+                </button>
+                <button className="icons del" onClick={() => handleDelete(type.id)}><div className="tooltip">Удалить</div>
+                  <span><AiOutlineDelete className="icon" size={24}></AiOutlineDelete></span></button>
+              </div>
+            </div>
+
+
+          ))}
+        </ul>
+      ) : (
+        <div>
+          <p className="nothing text-xl">У вас пока нет заявок<br />Добавьте типы, пожалуйста</p>
+        </div>
+      )}
+      {modalIsOpenType && (
+        <TypeModal 
+        index={index}
+        closeModal={closeModal}
+        newType={newType}
+    updatedType={updatedType}
+    handleInputChange={handleInputChange}
+    handleInputUpdateChange={handleInputUpdateChange}
+    handleSubmit={handleSubmit}
+    handleFormSubmit={handleFormSubmit}
+        />
+      )}
     </div>
   );
 };

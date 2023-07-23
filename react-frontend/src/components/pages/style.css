@@ -1,0 +1,211 @@
+.wrapper{
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 99999;
+    background: rgba( 0, 0, 0, 0.5);
+    display: grid;
+    align-items: center;
+    justify-content: center;
+    animation: fIn .3s ease-out;
+}
+
+.modal{
+    font-family: sans-serif;
+    padding: 20px;
+    width: 26vi;
+    background-color: rgb(248, 248, 243);
+    border-radius: 12px;
+    border-color: rgba(255, 90, 123, 0.781);
+    animation: sIn .3s ease-out;
+}
+@keyframes fIn{
+    from{
+        opacity: 0;
+    }
+    to{
+        opacity: 1;
+    }
+}
+@keyframes sIn{
+    from{
+        transform: translateY(-100%);
+    }
+    to{
+        transform: translateY(0);
+    }
+}
+.btn-close{
+    margin-top: -1vi;
+    display: flex;
+    justify-content: end;
+    align-items: end;
+}
+.req{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.content{
+    position: relative;
+    margin-top: 1vi;
+    
+}
+.content input{
+    padding: 5px 10px;
+    width: 19vi;
+    border-radius: 10px;
+    box-shadow: inset 5px 5px 5px rgba(0, 0, 0, 0.05),
+    5px 5px 5px rgba(0, 0, 0, 0.05),
+    3px 3px 5px  rgba(0, 0, 0, 0.05);
+}
+.content textarea{
+    width: 19vi;
+    border-radius: 10px;
+    padding: 5px 10px;
+    min-height: 5vi;
+    box-shadow: inset 5px 5px 5px rgba(0, 0, 0, 0.05),
+    5px 5px 5px rgba(0, 0, 0, 0.05),
+    3px 3px 5px  rgba(0, 0, 0, 0.05);
+}
+.content select{
+    width: 19vi;
+    border-radius: 10px;
+    padding: 5px 10px;
+    box-shadow: inset 5px 5px 5px rgba(0, 0, 0, 0.05),
+    5px 5px 5px rgba(0, 0, 0, 0.05),
+    3px 3px 5px  rgba(0, 0, 0, 0.05);
+}
+
+.btn-mod{
+    display: flex;
+    justify-content: center;
+    padding: 10px;
+}
+.content-req{
+    position: relative;
+    border-radius: 10px;
+    overflow-x: hidden;
+    width: 70%;
+    margin-top: 1vi;
+    margin-left: 16vi;
+    padding: 10px 50px;
+    border: crimson double;
+    
+}
+.items-info{
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: space-between;
+}
+.nothing{
+    position: relative;
+    display: grid;
+    top: 5vi;
+    text-align: center;
+    justify-content: center;
+    font-size: 1.6vi;
+    align-items: center;
+}
+.counters{
+    position: relative;
+    font-size: 1.3vi;
+}
+.count-type{
+    background-color: bisque;
+    border-radius: 30px;
+    padding: 6px;
+    align-self: flex-end;
+    white-space: nowrap;
+    margin-left: auto;
+}
+.request{
+    display: grid;
+    align-items: center;
+    justify-content: center;
+}
+.descrip{
+    width: 70%;
+    word-wrap: break-word;
+    white-space: pre-wrap;
+
+}
+.actions{
+    display: inline-flex;
+    padding-left: 46vi;
+    margin-top: -.5vi;
+    margin-bottom: 2vi;
+}
+.actions .icons{
+    margin: 0 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    position: relative;
+    z-index: 2;
+}
+.actions .icons span{
+    position: relative;
+    height: 60px;
+    width: 60px;
+    z-index: 2;
+    display: block;
+    background-color: rgb(255, 235, 210);
+    text-align: center;
+    border-radius: 50%;
+    box-shadow: 0 10px 10px rgba( 0, 0, 0, 0.2);
+}
+.actions .icons span .icon{
+    font-size: 25px;
+    margin: 17px;
+    line-height: 30px;
+}
+.actions .icons .tooltip{
+    background-color:rgb(112, 112, 112);
+    color: white;
+    position: absolute;
+    top: 0px;
+    font-size: 1vi;
+    opacity: 0;
+    pointer-events: none;
+    padding: 8px 12px;
+    border-radius: 25px;
+    box-shadow: 0 10px 10px rgba( 0, 0, 0, 0.2);
+    transition: all .5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+.actions .icons:hover .tooltip{
+    top: -56px;
+    opacity: 1;
+    pointer-events: auto;
+}
+.actions .icons .tooltip::before{
+    position: absolute;
+    content: "";
+    height: 19px;
+    width: 19px;
+    background:rgb(112, 112, 112);
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%) rotate(45deg);
+}
+.actions .icon:hover span,
+.actions .icon:hover .tooltip{
+    text-shadow: 0px -1px 0px rgba( 0, 0, 0, 0.4);
+}
+.line{
+    background-color: black;
+    height: 1px;
+}
+.btn-mod .sub{
+    margin-top: 2vi;
+    background-color: rgb(229, 157, 157);
+    padding: 10px;
+    border-radius: 10px;
+}
+
+button[type="submit"]:disabled{
+    opacity: .5;
+    cursor: not-allowed;
+}
