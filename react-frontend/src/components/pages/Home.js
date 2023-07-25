@@ -4,15 +4,18 @@ import RequestTypeService from '../../services/RequestTypeService';
 import RequestService from '../../services/RequestService';
 import Modal from 'react-modal';
 import Header from '../Header/Header';
+import AddModal from '../Modals/AddModal'
 
 Modal.setAppElement('#root');
 
-const Home = () => {
+const Home = ({handleEdit,handleFormSubmit,handleInputChange,handleInputUpdateChange}) => {
   const navigate = useNavigate();
   const [requestTypes, setRequestTypes] = useState([]);
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [selectedType, setSelectedType] = useState(null);
   const [fullName, setFullName] = useState('');
+  const [updatedType, setUpdatedType] = useState();
+  const [index, setIndex] = useState(-1);
   const [email, setEmail] = useState('');
   const [description, setDescription] = useState('');
 
@@ -39,16 +42,14 @@ const Home = () => {
     }
   };
 
-  const openModal = () => {
-    setModalIsOpen(true);
-  };
-
   const closeModal = () => {
     setModalIsOpen(false);
+    setIndex(-1);
     setSelectedType('');
     setFullName('');
     setEmail('');
     setDescription('');
+    setUpdatedType(null)
   };
 
   const handleTypeClick = (typeId) => {
@@ -84,7 +85,7 @@ const Home = () => {
             <div className="content-req">
               <div className="items-info">
                 <div className="request">
-          <li key={type.id} onClick={() => handleTypeClick(type.id)}>
+          <li className="cursor-pointer" key={type.id} onClick={() => handleTypeClick(type.id)}>
             <p className="text-3xl">{type.name}</p>
             <p className="text-m">{type.description}</p>            
           </li>
@@ -100,61 +101,22 @@ const Home = () => {
         <div>
           <p className="nothing text-xl">У вас пока нет заявок<br />Если вы еще не создали типы заявок, то вам следует перейти 
           <Link to='/types' className='text-blue-500	'>по ссылке</Link>
+          и нажать на кнопку "Добавить тип заявки"
             </p>
         </div>)
         }
 
-      <Modal isOpen={modalIsOpen} onRequestClose={closeModal}>
-        <h2>Добавить заявку</h2>
-        <form onSubmit={handleSubmit}>
-          <div>
-            <label>Тип заявки:</label>
-            <select
-              value={selectedType}
-              onChange={(e) => setSelectedType(e.target.value)}
-              required
-            >
-              <option value="">Выберите тип заявки</option>
-              {requestTypes.map((type) => (
-                <option key={type.id} value={type.id}>
-                  {type.name}
-                </option>
-              ))}
-            </select>
-
-          </div>
-          <div>
-            <label>ФИО:</label>
-            <input
-              type="text"
-              value={fullName}
-              onChange={(e) => setFullName(e.target.value)}
-              required
-            />
-          </div>
-          <div>
-            <label>Email:</label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-          </div>
-          <div>
-            <label>Описание заявки:</label>
-            <textarea
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              required
-            ></textarea>
-          </div>
-          <button type="submit">Сохранить</button>
-          <button type="button" onClick={closeModal}>
-            Закрыть
-          </button>
-        </form>
-      </Modal>
+      {modalIsOpen&&(
+        <AddModal
+        index={index}
+        closeModal={closeModal}
+    updatedType={updatedType}
+    handleInputChange={handleInputChange}
+    handleInputUpdateChange={handleInputUpdateChange}
+    handleSubmit={handleSubmit}
+    handleFormSubmit={handleFormSubmit}
+        />
+      )}
     </div>
   );
 };

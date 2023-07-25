@@ -5,6 +5,7 @@
     z-index: 99999;
     background: rgba( 0, 0, 0, 0.5);
     display: grid;
+    overflow-y: auto;
     align-items: center;
     justify-content: center;
     animation: fIn .3s ease-out;
@@ -13,7 +14,7 @@
 .modal{
     font-family: sans-serif;
     padding: 20px;
-    width: 26vi;
+    width: 22vi;
     background-color: rgb(248, 248, 243);
     border-radius: 12px;
     border-color: rgba(255, 90, 123, 0.781);
@@ -64,6 +65,7 @@
     border-radius: 10px;
     padding: 5px 10px;
     min-height: 5vi;
+    max-height: 5vi;
     box-shadow: inset 5px 5px 5px rgba(0, 0, 0, 0.05),
     5px 5px 5px rgba(0, 0, 0, 0.05),
     3px 3px 5px  rgba(0, 0, 0, 0.05);
@@ -133,8 +135,8 @@
 }
 .actions{
     display: inline-flex;
-    padding-left: 46vi;
-    margin-top: -.5vi;
+    padding-left: 49vi;
+    margin-top: -.6vi;
     margin-bottom: 2vi;
 }
 .actions .icons{

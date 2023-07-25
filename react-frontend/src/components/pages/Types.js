@@ -6,7 +6,7 @@ import { AiOutlineDelete } from "react-icons/ai"
 import { AiOutlineEdit } from "react-icons/ai"
 import TypeModal from '../Modals/TypeModal';
 
-const Types = (type,onClose) => {
+const Types = (type) => {
   const [requestTypes, setRequestTypes] = useState([]);
   const [modalIsOpenType, setModalIsOpenType] = useState(false);
   const [index, setIndex] = useState(-1);
