@@ -10,7 +10,7 @@ function Header({ onOpen, setModalIsOpenType }) {
 
     const [pageTitle, setPageTitle] = useState("Главная страница")
     const [buttonContent, setButtonContent] = useState({
-        text: "Оставить заявку",
+        text: "Добавить заявку",
         onClick: onOpen
     });
 
@@ -24,23 +24,31 @@ function Header({ onOpen, setModalIsOpenType }) {
                 text: "Добавить тип заявки",
                 onClick: () => setModalIsOpenType(true)
             });
-        } else {
+        } else if (location.pathname === "/") {
             setPageTitle("Главная страница");
             setButtonContent({
-                text: "Оставить заявку",
+                text: "Добавить заявку",
                 onClick: onOpen
             });
+        } else {
+            setPageTitle("Ваши заявки");
+            setButtonContent({
+                text: "Главная страница",
+                onClick: clickReqType
+            })
         }
-    }, [location]);
+    }, [location,clickReqType]);
 
     function clickReqType() {
-        if(location.pathname==="/types"){
+        if (location.pathname === "/types") {
             page("/");
         }
-        else{
+        else if (location.pathname === "/") {
             page("/types")
         }
-        
+        else {
+            page("/types")
+        }
     }
 
 
@@ -66,18 +74,21 @@ function Header({ onOpen, setModalIsOpenType }) {
 
 
             <div className="flex pl-96">
-                <div className="btn">
-                    <button onClick={buttonContent.onClick}>
-                        <span>{buttonContent.text}</span>
-                    </button>
-                </div>
-                <div className="btn">
-                    <button onClick={clickReqType}>
-                        <span>{location.pathname === "/types" ? "Главная страница" : "Работа с типами заявок"}</span>
-                    </button>
-                </div>
+                    <div className="btn">
+                        <button onClick={buttonContent.onClick}>
+                            <span>{buttonContent.text}</span>
+                        </button>
+                    </div>
+
+                
+                    <div className="btn">
+                        <button onClick={clickReqType}>
+                            <span>{location.pathname === "/types" ? "Главная страница" :
+                                location.pathname === "/" ? "Работа с типами заявок" : "Работа с типами заявок"}</span>
+                        </button>
+                    </div>
             </div>
-            
+
         </div>
 
 

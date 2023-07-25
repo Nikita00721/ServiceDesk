@@ -21,9 +21,8 @@ const TypeModal=({index,
               onClick={closeModal}
               onKeyDown={closeModal}
               tabIndex={0}
-              role="button"
             >
-              <AiOutlineCloseCircle size={20} />
+              <AiOutlineCloseCircle size={20} className="cursor-pointer" />
             </div>
             {
               index == -1 ? (
