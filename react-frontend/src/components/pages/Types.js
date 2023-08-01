@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
 import RequestTypeService from '../../services/RequestTypeService';
 import Header from '../Header/Header';
 import { AiOutlineDelete } from "react-icons/ai"
@@ -87,8 +86,12 @@ const Types = (type) => {
 
   const handleDelete = async (id) => {
     try {
+      const confirmed=window.confirm("Вы уверены,что хотите удалить эту заявку?")
+      if(confirmed){
       await RequestTypeService.deleteType(id);
+      alert('Заявку успешно удалена');
       fetchRequestTypes();
+      }
     } catch (error) {
       alert('Невозможно удалить тип заявки. Удалите, пожалуйста, все заявки этого типа: ' + error);
     }
@@ -132,15 +135,15 @@ const Types = (type) => {
         </div>
       )}
       {modalIsOpenType && (
-        <TypeModal 
-        index={index}
-        closeModal={closeModal}
-        newType={newType}
-    updatedType={updatedType}
-    handleInputChange={handleInputChange}
-    handleInputUpdateChange={handleInputUpdateChange}
-    handleSubmit={handleSubmit}
-    handleFormSubmit={handleFormSubmit}
+        <TypeModal
+          index={index}
+          closeModal={closeModal}
+          newType={newType}
+          updatedType={updatedType}
+          handleInputChange={handleInputChange}
+          handleInputUpdateChange={handleInputUpdateChange}
+          handleSubmit={handleSubmit}
+          handleFormSubmit={handleFormSubmit}
         />
       )}
     </div>

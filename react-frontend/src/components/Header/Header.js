@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { LuHome } from "react-icons/lu"
 import "./Header.css"
-import { CiSquareQuestion } from "react-icons/ci"
 import { useNavigate, useLocation, Link } from "react-router-dom"
-// import ModalTypeForm from "../Modal/ModalTypeForm"
 
 
 function Header({ onOpen, setModalIsOpenType }) {
 
     const [pageTitle, setPageTitle] = useState("Главная страница")
+
     const [buttonContent, setButtonContent] = useState({
         text: "Добавить заявку",
         onClick: onOpen
@@ -16,6 +15,11 @@ function Header({ onOpen, setModalIsOpenType }) {
 
     const page = useNavigate();
     const location = useLocation();
+
+
+    const mainPage = () => {
+        page("/")
+    }
 
     useEffect(() => {
         if (location.pathname === "/types") {
@@ -34,10 +38,11 @@ function Header({ onOpen, setModalIsOpenType }) {
             setPageTitle("Ваши заявки");
             setButtonContent({
                 text: "Главная страница",
-                onClick: clickReqType
+                onClick: mainPage
             })
         }
-    }, [location,clickReqType]);
+    }, [location, mainPage]);
+
 
     function clickReqType() {
         if (location.pathname === "/types") {
@@ -58,9 +63,9 @@ function Header({ onOpen, setModalIsOpenType }) {
 
 
             <div className="flex items-center">
-                <div className="ml-3 rounded-xl py-1 px-1 us-border">
-                    <Link to="/" className="cursor-pointer"><LuHome size={24} /></Link>
-                </div>
+                <Link to="/" className="ml-3 rounded-xl py-1 px-1 us-border cursor-pointer">
+                    <LuHome size={24} />
+                </Link>
                 <div className="text-2xl font-bold mx-2">
                     Request List
                 </div>
@@ -74,19 +79,15 @@ function Header({ onOpen, setModalIsOpenType }) {
 
 
             <div className="flex pl-96">
-                    <div className="btn">
-                        <button onClick={buttonContent.onClick}>
-                            <span>{buttonContent.text}</span>
-                        </button>
-                    </div>
+                <button className="btn" onClick={buttonContent.onClick}>
+                    <span>{buttonContent.text}</span>
+                </button>
 
-                
-                    <div className="btn">
-                        <button onClick={clickReqType}>
-                            <span>{location.pathname === "/types" ? "Главная страница" :
-                                location.pathname === "/" ? "Работа с типами заявок" : "Работа с типами заявок"}</span>
-                        </button>
-                    </div>
+
+                <button className="btn" onClick={clickReqType}>
+                    <span>{location.pathname === "/types" ? "Главная страница" :
+                        location.pathname === "/" ? "Работа с типами заявок" : "Работа с типами заявок"}</span>
+                </button>
             </div>
 
         </div>

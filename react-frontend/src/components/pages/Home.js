@@ -2,20 +2,16 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import RequestTypeService from '../../services/RequestTypeService';
 import RequestService from '../../services/RequestService';
-import Modal from 'react-modal';
 import Header from '../Header/Header';
 import AddModal from '../Modals/AddModal'
 
-Modal.setAppElement('#root');
 
-const Home = ({handleEdit,handleFormSubmit,handleInputChange,handleInputUpdateChange}) => {
+const Home = () => {
   const navigate = useNavigate();
   const [requestTypes, setRequestTypes] = useState([]);
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [selectedType, setSelectedType] = useState(null);
   const [fullName, setFullName] = useState('');
-  const [updatedType, setUpdatedType] = useState();
-  const [index, setIndex] = useState(-1);
   const [email, setEmail] = useState('');
   const [description, setDescription] = useState('');
 
@@ -44,12 +40,10 @@ const Home = ({handleEdit,handleFormSubmit,handleInputChange,handleInputUpdateCh
 
   const closeModal = () => {
     setModalIsOpen(false);
-    setIndex(-1);
     setSelectedType('');
     setFullName('');
     setEmail('');
     setDescription('');
-    setUpdatedType(null)
   };
 
   const handleTypeClick = (typeId) => {
@@ -85,36 +79,40 @@ const Home = ({handleEdit,handleFormSubmit,handleInputChange,handleInputUpdateCh
             <div className="content-req">
               <div className="items-info">
                 <div className="request">
-          <li className="cursor-pointer" key={type.id} onClick={() => handleTypeClick(type.id)}>
-            <p className="text-3xl">{type.name}</p>
-            <p className="text-m">{type.description}</p>            
-          </li>
-          </div>
-          <div className="count-type">
-            <p className="text-2xl">{type.count}</p>
+                  <li className="cursor-pointer" key={type.id} onClick={() => handleTypeClick(type.id)}>
+                    <p className="text-3xl">{type.name}</p>
+                    <p className="text-m">{type.description}</p>
+                  </li>
+                </div>
+                <div className="count-type">
+                  <p className="text-2xl">{type.count}</p>
+                </div>
+              </div>
             </div>
-          </div>
-          </div>
-        ))}
+          ))}
         </ul>
       ) : (
         <div>
-          <p className="nothing text-xl">У вас пока нет заявок<br />Если вы еще не создали типы заявок, то вам следует перейти 
-          <Link to='/types' className='text-blue-500	'>по ссылке</Link>
-          и нажать на кнопку "Добавить тип заявки"
-            </p>
+          <p className="nothing text-xl">У вас пока нет заявок<br />Если вы еще не создали типы заявок, то вам следует перейти
+            <Link to='/types' className='text-blue-500	'>по ссылке</Link>
+            и нажать на кнопку "Добавить тип заявки"
+          </p>
         </div>)
-        }
+      }
 
-      {modalIsOpen&&(
+      {modalIsOpen && (
         <AddModal
-        index={index}
-        closeModal={closeModal}
-    updatedType={updatedType}
-    handleInputChange={handleInputChange}
-    handleInputUpdateChange={handleInputUpdateChange}
-    handleSubmit={handleSubmit}
-    handleFormSubmit={handleFormSubmit}
+          closeModal={closeModal}
+          handleSubmit={handleSubmit}
+          selectedType={selectedType}
+          setSelectedType={setSelectedType}
+          email={email}
+          setEmail={setEmail}
+          description={description}
+          setDescription={setDescription}
+          fullName={fullName}
+          setFullName={setFullName}
+          requestTypes={requestTypes}
         />
       )}
     </div>
