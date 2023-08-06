@@ -81,7 +81,7 @@ const Home = () => {
                 <div className="request">
                   <li className="cursor-pointer" key={type.id} onClick={() => handleTypeClick(type.id)}>
                     <p className="text-3xl">{type.name}</p>
-                    <p className="text-m">{type.description}</p>
+                    <p className="text-m descrip">{type.description}</p>
                   </li>
                 </div>
                 <div className="count-type">

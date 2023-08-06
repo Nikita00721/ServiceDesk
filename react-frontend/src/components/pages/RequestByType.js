@@ -114,7 +114,7 @@ const RequestByType = () => {
                       <div>
                         <strong>Email:</strong> {request.email}
                       </div>
-                      <div>
+                      <div className='descrip' maxLenght="100">
                         <strong>Описание:</strong> {request.description}
                       </div>
                       <div>

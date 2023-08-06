@@ -1,5 +1,6 @@
 import React from "react";
 import { AiOutlineCloseCircle } from "react-icons/ai";
+import { useState } from 'react';
 
 
 const TypeModal = ({ index,
@@ -12,6 +13,41 @@ const TypeModal = ({ index,
   handleFormSubmit,
 
 }) => {
+  const [nameError, setNameError] = useState("");
+const nameRegex = /^[a-zA-Zа-яА-Я\s]+$/;
+const validateInput = () => {
+if (!newType.name || !nameRegex.test(newType.name)) {
+setNameError("Введите корректное название");
+return false;
+}
+
+setNameError("");
+return true;
+};
+const validateInputUpdate = () => {
+  if (!updatedType.name || !nameRegex.test(updatedType.name)) {
+  setNameError("Введите корректное название");
+  return false;
+  }
+  
+  setNameError("");
+  return true;
+  };
+
+const handleAddSubmit = (e) => {
+e.preventDefault();
+if (validateInput(newType)) {
+handleSubmit(e);
+}
+};
+
+const handleUpdateSubmit = (e) => {
+e.preventDefault();
+if (validateInputUpdate(updatedType)) {
+handleFormSubmit(e);
+}
+};
+
 
   return (
     <div className="wrapper h-screen w-screen">
@@ -29,9 +65,10 @@ const TypeModal = ({ index,
             <div>
               <h1 className="text-xl text-center text-black">Добавить тип заявки</h1>
               <div className="req">
-                <form onSubmit={handleSubmit}>
+                <form onSubmit={handleAddSubmit}>
                   <div className="content">
                     <label>Название:</label>
+                    {nameError && <p className="text-xs text-rose-500">{nameError}</p>}
                     <input
                       type="text"
                       name="name"
@@ -61,9 +98,10 @@ const TypeModal = ({ index,
             <div>
               <h1 className="text-xl text-center text-black">Редактирование типа</h1>
               <div className="req">
-                <form onSubmit={handleFormSubmit}>
+                <form onSubmit={handleUpdateSubmit}>
                   <div className="content">
                     <label>Название:</label>
+                    {nameError && <p className="text-xs text-rose-500">{nameError}</p>}
                     <input
                       type="text"
                       name="name"

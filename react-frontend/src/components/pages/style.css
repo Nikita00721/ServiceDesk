@@ -93,13 +93,14 @@
     margin-left: 16vi;
     padding: 10px 50px;
     border: crimson double;
-    
 }
 .items-info{
     display: flex;
     flex-wrap: wrap;
     align-items: flex-start;
     justify-content: space-between;
+    padding-top: .5vi;
+    padding-bottom: .5vi;
 }
 .nothing{
     position: relative;
@@ -125,33 +126,33 @@
 .request{
     display: grid;
     align-items: center;
-    justify-content: center;
+    justify-content: center;  
 }
 .descrip{
-    width: 70%;
     word-wrap: break-word;
     white-space: pre-wrap;
-
+    word-break: break-all;
+    overflow-wrap: break-word;
 }
 .actions{
     display: inline-flex;
-    padding-left: 49vi;
-    margin-top: -.6vi;
-    margin-bottom: 2vi;
+    padding-left: 54vi;
 }
 .actions .icons{
-    margin: 0 20px;
+    margin: 0 5px;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-direction: column;
     position: relative;
     z-index: 2;
+    position: relative;
+    /* top: -.3vi; */
 }
 .actions .icons span{
     position: relative;
-    height: 60px;
-    width: 60px;
+    height: 50px;
+    width: 50px;
     z-index: 2;
     display: block;
     background-color: rgb(255, 235, 210);
@@ -160,9 +161,9 @@
     box-shadow: 0 10px 10px rgba( 0, 0, 0, 0.2);
 }
 .actions .icons span .icon{
-    font-size: 25px;
-    margin: 17px;
-    line-height: 30px;
+    font-size: 15px;
+    margin: 12px;
+    line-height: 20px;
 }
 .actions .icons .tooltip{
     background-color:rgb(112, 112, 112);
@@ -172,23 +173,23 @@
     font-size: 1vi;
     opacity: 0;
     pointer-events: none;
-    padding: 8px 12px;
+    padding: 2px 8px;
     border-radius: 25px;
     box-shadow: 0 10px 10px rgba( 0, 0, 0, 0.2);
     transition: all .5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
 }
 .actions .icons:hover .tooltip{
-    top: -56px;
+    top: -40px;
     opacity: 1;
     pointer-events: auto;
 }
 .actions .icons .tooltip::before{
     position: absolute;
     content: "";
-    height: 19px;
-    width: 19px;
+    height: 10px;
+    width: 10px;
     background:rgb(112, 112, 112);
-    bottom: -10px;
+    bottom: -5px;
     left: 50%;
     transform: translateX(-50%) rotate(45deg);
 }
@@ -196,18 +197,10 @@
 .actions .icon:hover .tooltip{
     text-shadow: 0px -1px 0px rgba( 0, 0, 0, 0.4);
 }
-.line{
-    background-color: black;
-    height: 1px;
-}
+
 .btn-mod .sub{
     margin-top: 2vi;
     background-color: rgb(229, 157, 157);
     padding: 10px;
     border-radius: 10px;
-}
-
-button[type="submit"]:disabled{
-    opacity: .5;
-    cursor: not-allowed;
 }

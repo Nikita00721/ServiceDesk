@@ -13,6 +13,7 @@ class RequestTypeService {
     return this.axiosInstance.get(`/${id}`);
   }
 
+
 getRequestTypes() {
   return this.axiosInstance.get('/');
 }

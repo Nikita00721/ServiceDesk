@@ -6,7 +6,7 @@ import { AiOutlineCloseCircle } from "react-icons/ai";
 
 
 
-const RequestEdit = ({ closeModal, requestId, requestData, handleUpdateSuccess }) => {
+const RequestEdit = ({ closeModal, requestId, requestData, handleUpdateSuccess}) => {
   const { id, requestTypeId } = useParams();
   const [request, setRequest] = useState({
     fullName: '',
@@ -17,7 +17,8 @@ const RequestEdit = ({ closeModal, requestId, requestData, handleUpdateSuccess }
 
   const [requestTypes, setRequestTypes] = useState([]);
   const [requestTypeName, setRequestTypeName] = useState('');
-  const [selectedRequestType, setSelectedRequestType] = useState(null);
+  const [fullNameError, setFullNameError] = useState("");
+  const [emailError, setEmailError] = useState("");
 
 
   useEffect(() => {
@@ -26,7 +27,6 @@ const RequestEdit = ({ closeModal, requestId, requestData, handleUpdateSuccess }
         fullName: requestData.fullName,
         email: requestData.email,
         description: requestData.description,
-        requestType: requestData.requestType ? request.requestType : null,
       })
     }
     fetchRequest();
@@ -37,7 +37,6 @@ const RequestEdit = ({ closeModal, requestId, requestData, handleUpdateSuccess }
     try {
       const response = await RequestService.getRequest(id);
       setRequest(response.data);
-      setSelectedRequestType(response.data.requestType);
     } catch (error) {
       console.error('Error fetching request:', error);
     }
@@ -47,16 +46,6 @@ const RequestEdit = ({ closeModal, requestId, requestData, handleUpdateSuccess }
     try {
       const response = await RequestTypeService.getRequestTypes();
       setRequestTypes(response.data);
-      const selectedType = response.data.find((type) => type.id === parseInt(requestTypeId));
-      console.log('requestTypeId:', requestTypeId);
-      console.log('selectedType.id:', selectedType ? selectedType.id : null);
-      if (selectedType) {
-        setRequestTypeName(selectedType.name);
-        setRequest((prevRequest) => ({
-          ...prevRequest,
-          requestType: selectedType.id,
-        }));
-      }
     } catch (error) {
       console.error('Error fetching request types:', error);
     }
@@ -65,37 +54,50 @@ const RequestEdit = ({ closeModal, requestId, requestData, handleUpdateSuccess }
   const handleChange = (e) => {
     const { name, value } = e.target;
 
-    if (name === 'requestType') {
-      const selectedType = requestTypes.find((type) => type.id === parseInt(value));
-
-      setRequest((prevRequest) => ({
-        ...prevRequest,
-        requestType: selectedType ? selectedType.id : null,
-      }));
-    } else {
       setRequest((prevRequest) => ({
         ...prevRequest,
         [name]: value,
       }));
-    }
   };
+
+  const validate = () => {
+    const nameRegex = /^[a-zA-Zа-яА-Я]+\s[a-zA-Zа-яА-Я]+\s[a-zA-Zа-яА-Я]+$/;
+const emailRegex=/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
+
+    if (!request.fullName || !nameRegex.test(request.fullName)) {
+    setFullNameError("Введите корректное полное имя");
+    return false;
+    } else {
+    setFullNameError("");
+    }
+    
+    if (!request.email || !emailRegex.test(request.email)) {
+    setEmailError("Введите корректный email");
+    return false;
+    } else {
+    setEmailError("");
+    }
+    
+    return true;
+    };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      const updatedRequest = {
-        ...requestData,
-        fullName: request.fullName,
-        email: request.email,
-        description: request.description,
-        requestType: request.requestType ? { id: request.requestType } : null,
-      };
-      await RequestService.updateRequest(updatedRequest);
-      alert('Заявка успешно изменена');
-      handleUpdateSuccess(updatedRequest)
-      closeModal()
-    } catch (error) {
-      alert('Ошибка. Невозможно изменить заявку', error);
+    if(validate()){
+      try {
+        const updatedRequest = {
+          ...requestData,
+          fullName: request.fullName,
+          email: request.email,
+          description: request.description,
+        };
+        await RequestService.updateRequest(updatedRequest);
+        alert('Заявка успешно изменена');
+        handleUpdateSuccess(updatedRequest)
+        closeModal()
+      } catch (error) {
+        alert('Ошибка. Невозможно изменить заявку', error);
+      }
     }
   };
 
@@ -114,6 +116,7 @@ const RequestEdit = ({ closeModal, requestId, requestData, handleUpdateSuccess }
         <form onSubmit={handleSubmit}>
           <div className='content'>
             <label>Полное имя:</label>
+            {fullNameError && <p className="text-xs text-rose-500">{fullNameError}</p>}
             <input
               type="text"
               name="fullName"
@@ -123,6 +126,7 @@ const RequestEdit = ({ closeModal, requestId, requestData, handleUpdateSuccess }
           </div>
           <div className='content'>
             <label>Email:</label>
+            {emailError && <p className="text-xs text-rose-500">{emailError}</p>}
             <input
               type="email"
               name="email"
@@ -138,20 +142,7 @@ const RequestEdit = ({ closeModal, requestId, requestData, handleUpdateSuccess }
               onChange={handleChange}
             ></textarea>
           </div>
-          <div className='content'>
-            <label>Тип заявки:</label>
-            <select
-              name="requestType"
-              value={request.requestType || ''}
-              onChange={handleChange}
-            >
-              {requestTypes.map((requestType) => (
-                <option key={requestType.id} value={requestType.id}>
-                  {requestType.name}
-                </option>
-              ))}
-            </select>
-          </div>
+          
           <div className="btn-mod">
             <button className='sub' type="submit">Сохранить</button>
           </div>
