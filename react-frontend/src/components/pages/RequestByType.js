@@ -30,16 +30,20 @@ const RequestByType = () => {
     
     switch (sortOption) {
     case 'asc':
-    sortedRequests.sort((a, b) => a.name.localeCompare(b.name, 'ru', { sensitivity: 'base' }));
+    sortedRequests.sort((a, b) => a.fullName.localeCompare(b.fullName, 'ru', { sensitivity: 'base' }));
     break;
     case 'desc':
-    sortedRequests.sort((a, b) => b.name.localeCompare(a.name, 'ru', { sensitivity: 'base' }));
+    sortedRequests.sort((a, b) => b.fullName.localeCompare(a.fullName, 'ru', { sensitivity: 'base' }));
     break;
     case 'date-asc':
     sortedRequests.sort((a, b) => new Date(a.submissionDate) - new Date(b.submissionDate));
     break;
     case 'date-desc':
     sortedRequests.sort((a, b) => new Date(b.submissionDate) - new Date(a.submissionDate));
+    break;
+    case 'all':
+      fetchRequestType();
+      fetchRequests();
     break;
     default:
     break;

@@ -30,6 +30,9 @@ const Types = (type) => {
     case 'desc':
     sortedRequests.sort((a, b) => b.name.localeCompare(a.name, 'ru', { sensitivity: 'base' }));
     break;
+    case 'all':
+      fetchRequestTypes();
+    break;
     default:
     break;
     }

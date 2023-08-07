@@ -261,9 +261,9 @@
     margin-left: 5px;
 }
     
-.mini-modal {
-    position: fixed;
-    top: 10.8vi;
+.mini-modal1 {
+    position: absolute;
+    top: 11vi;
     left: 21vi;
     transform: translate(-50%, -50%);
     background-color: #fff;
@@ -274,4 +274,5 @@
     white-space: nowrap;
 
 }
-    
+
+
