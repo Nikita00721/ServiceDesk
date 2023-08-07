@@ -4,9 +4,10 @@ import RequestTypeService from '../../services/RequestTypeService';
 import RequestService from '../../services/RequestService';
 import Header from '../Header/Header';
 import AddModal from '../Modals/AddModal'
+import Filter from '../Filter/Filter';
 
 
-const Home = () => {
+const Home = (type) => {
   const navigate = useNavigate();
   const [requestTypes, setRequestTypes] = useState([]);
   const [modalIsOpen, setModalIsOpen] = useState(false);
@@ -14,6 +15,28 @@ const Home = () => {
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [description, setDescription] = useState('');
+  const [sortBy, setSortBy] = useState(null);
+
+  const handleSort = (sortOption) => {
+    setSortBy(sortOption);
+    const sortedRequests = [...requestTypes];
+    
+    switch (sortOption) {
+    case 'asc':
+    sortedRequests.sort((a, b) => a.name.localeCompare(b.name, 'ru', { sensitivity: 'base' }));
+    break;
+    case 'desc':
+    sortedRequests.sort((a, b) => b.name.localeCompare(a.name, 'ru', { sensitivity: 'base' }));
+    break;
+    // case 'all':
+    //   setSortBy(null)
+    // break;
+    default:
+    break;
+    }
+    
+    setRequestTypes(sortedRequests);
+    };
 
   useEffect(() => {
     fetchRequestTypes();
@@ -73,6 +96,7 @@ const Home = () => {
     <div>
       <Header onOpen={setModalIsOpen} />
       <h2 className="flex justify-center text-3xl mt-2">Просмотр заявок</h2>
+      <Filter onSort={handleSort}></Filter>
       {requestTypes.length > 0 ? (
         <ul>
           {requestTypes.map((type) => (

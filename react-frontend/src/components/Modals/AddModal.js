@@ -33,6 +33,7 @@ if(!email||!emailRegex.test(email)){
   setEmailError("Введите корректную эл.почту");
   return false;
 }
+return true;
 };
 
 const handleSubmitForm = (e) => {

@@ -7,6 +7,8 @@ import { AiOutlineDelete } from "react-icons/ai"
 import { AiOutlineEdit } from "react-icons/ai"
 import "./RequestByType.css"
 import RequestEdit from '../Modals/RequestEdit';
+import Filter from '../Filter/Filter';
+
 
 const RequestByType = () => {
   const { typeId } = useParams();
@@ -16,7 +18,35 @@ const RequestByType = () => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [requestType, setRequestType] = useState('');
   const [selectedRequestId, setSelectedRequestId] = useState(null)
+  const [sortBy, setSortBy] = useState(null);
+  const [showMenuDate, setShowMenuDate] = useState(true)
 
+
+
+  const handleSort = (sortOption) => {
+    setSortBy(sortOption);
+    
+    const sortedRequests = [...requests];
+    
+    switch (sortOption) {
+    case 'asc':
+    sortedRequests.sort((a, b) => a.name.localeCompare(b.name, 'ru', { sensitivity: 'base' }));
+    break;
+    case 'desc':
+    sortedRequests.sort((a, b) => b.name.localeCompare(a.name, 'ru', { sensitivity: 'base' }));
+    break;
+    case 'date-asc':
+    sortedRequests.sort((a, b) => new Date(a.submissionDate) - new Date(b.submissionDate));
+    break;
+    case 'date-desc':
+    sortedRequests.sort((a, b) => new Date(b.submissionDate) - new Date(a.submissionDate));
+    break;
+    default:
+    break;
+    }
+    
+    setRequests(sortedRequests);
+    };
 
   useEffect(() => {
 
@@ -97,6 +127,7 @@ const RequestByType = () => {
     <div>
       <Header />
       <h2 className="flex justify-center text-3xl mt-2">Ваши заявки типа {requestType}</h2>
+      <Filter onSort={handleSort} showMenuDate={showMenuDate} setShowMenuDate={setShowMenuDate}></Filter>
       <div>
         {requests.length > 0 ? (
           <ul>

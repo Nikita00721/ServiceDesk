@@ -67,7 +67,7 @@ function Header({ onOpen, setModalIsOpenType }) {
                     <LuHome size={24} />
                 </Link>
                 <div className="text-2xl font-bold mx-2">
-                    Request List
+                    ServiceDesk
                 </div>
             </div>
 

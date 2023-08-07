@@ -4,6 +4,7 @@ import Header from '../Header/Header';
 import { AiOutlineDelete } from "react-icons/ai"
 import { AiOutlineEdit } from "react-icons/ai"
 import TypeModal from '../Modals/TypeModal';
+import Filter from '../Filter/Filter';
 
 const Types = (type) => {
   const [requestTypes, setRequestTypes] = useState([]);
@@ -14,6 +15,27 @@ const Types = (type) => {
     description: '',
   });
   const [updatedType, setUpdatedType] = useState(type);
+  const [sortBy, setSortBy] = useState(null);
+
+
+  const handleSort = (sortOption) => {
+    setSortBy(sortOption);
+    
+    const sortedRequests = [...requestTypes];
+    
+    switch (sortOption) {
+    case 'asc':
+    sortedRequests.sort((a, b) => a.name.localeCompare(b.name, 'ru', { sensitivity: 'base' }));
+    break;
+    case 'desc':
+    sortedRequests.sort((a, b) => b.name.localeCompare(a.name, 'ru', { sensitivity: 'base' }));
+    break;
+    default:
+    break;
+    }
+    
+    setRequestTypes(sortedRequests);
+    };
 
   useEffect(() => {
     fetchRequestTypes();
@@ -102,6 +124,7 @@ const Types = (type) => {
 
       <Header onOpen={setModalIsOpenType} setModalIsOpenType={setModalIsOpenType} />
       <h2 className="flex justify-center text-3xl mt-2">Типы заявок</h2>
+      <Filter onSort={handleSort}></Filter>
       {requestTypes.length > 0 ? (
         <ul>
           {requestTypes.map((type) => (
